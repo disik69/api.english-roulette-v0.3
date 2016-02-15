@@ -15,6 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test-route', function () {
-   dd(URL::current());
-});
+Route::get('/create-collocations', 'SandboxController@createCollocations');
+Route::get('/create-exercise', 'SandboxController@createExercise');
+Route::get('/user/{id}/exercises', 'SandboxController@getUserExercises');
