@@ -97,6 +97,15 @@ class SandboxController extends Controller
         dd(\DB::getQueryLog());
     }
 
+    public function checkCaptcha()
+    {
+        $rules = ['captcha' => 'required|captcha'];
+
+        $validator = \Validator::make(\Request::all(), $rules);
+
+        return response()->json(['validate' => $validator->passes()]);
+    }
+
     public function signin()
     {
         $credentials = \Request::only('email', 'password');

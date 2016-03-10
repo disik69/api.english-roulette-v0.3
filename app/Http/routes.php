@@ -19,6 +19,8 @@ Route::get('/create-collocations', 'SandboxController@createCollocations');
 Route::get('/create-exercise', 'SandboxController@createExercise');
 Route::get('/user/{id}/exercises', 'SandboxController@getUserExercises');
 
+Route::get('/check-captcha', 'SandboxController@checkCaptcha');
+
 Route::post('/signin', 'SandboxController@signin');
 Route::get('/test-user', [
     'middleware' => ['jwt.auth', 'acl'],

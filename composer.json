@@ -9,7 +9,8 @@
         "laravel/framework": "5.1.*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "tymon/jwt-auth": "0.5.*",
-        "kodeine/laravel-acl": "~1.0@dev"
+        "kodeine/laravel-acl": "~1.0@dev",
+        "mews/captcha": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
