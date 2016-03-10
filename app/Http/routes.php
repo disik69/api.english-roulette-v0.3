@@ -18,3 +18,13 @@ Route::get('/', function () {
 Route::get('/create-collocations', 'SandboxController@createCollocations');
 Route::get('/create-exercise', 'SandboxController@createExercise');
 Route::get('/user/{id}/exercises', 'SandboxController@getUserExercises');
+
+Route::post('/signin', 'SandboxController@signin');
+Route::get('/test-user', [
+    'middleware' => ['jwt.auth', 'acl'],
+    'is' => 'user', 'uses' => 'SandboxController@testUser'
+]);
+Route::get('/test-admin', [
+    'middleware' => ['jwt.auth', 'acl'],
+    'is' => 'admin', 'uses' => 'SandboxController@testAdmin'
+]);

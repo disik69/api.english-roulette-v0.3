@@ -7,6 +7,7 @@ use App\User;
 use App\Word;
 use App\Translation;
 use App\Exercise;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class SandboxController extends Controller
 {
@@ -94,5 +95,36 @@ class SandboxController extends Controller
         }
 
         dd(\DB::getQueryLog());
+    }
+
+    public function signin()
+    {
+        $credentials = \Request::only('email', 'password');
+
+        try {
+            if (! $token = \JWTAuth::attempt($credentials)) {
+                $result = response()->json(['message' => 'invalid credentials'], 401);
+            } else {
+                $result = response()->json(compact('token'));
+            }
+        } catch (JWTException $e) {
+            $result = response()->json(['message' => 'could not create token'], 500);
+        }
+
+        return $result;
+    }
+
+    public function testUser()
+    {
+        $user = \Auth::user();
+
+        return response()->json(compact('user'));
+    }
+
+    public function testAdmin()
+    {
+        $user = \Auth::user();
+
+        return response()->json(compact('user'));
     }
 }
