@@ -17,6 +17,9 @@ use Kodeine\Acl\Traits\HasRole;
  *
  * @property $name
  * @property $email
+ * @property $reading_count
+ * @property $memory_count
+ * @property $repeat_term
  */
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
@@ -36,7 +39,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'password', 'reading_count', 'memory_count', 'repeat_term'];
 
     /**
      * The attributes excluded from the model's JSON form.
