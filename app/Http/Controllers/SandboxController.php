@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Faker\Generator as FakerGenerator;
 use App\User;
 use App\Word;
@@ -98,11 +99,21 @@ class SandboxController extends Controller
 
     public function checkCaptcha()
     {
-        $rules = ['captcha' => 'required|captcha'];
+        $captchaStore = new \App\Captcha\CaptchaStore();
 
-        $validator = \Validator::make(\Request::all(), $rules);
+        $captchaStore->add(false, 'abc', \Carbon\Carbon::now()->subMinute(1));
+        $captchaStore->add(false, 'abc', \Carbon\Carbon::now()->addMinute(1));
+        $captchaStore->add(true, 'aBc', \Carbon\Carbon::now()->addMinute(1));
 
-        return response()->json(['validate' => $validator->passes()]);
+        $serializedCaptchaStore = serialize($captchaStore);
+
+        $captchaStore = unserialize($serializedCaptchaStore);
+
+        dd(
+            \Cache::get('captcha'),
+            captcha_check(\Request::get('captcha')),
+            \Cache::get('captcha')
+        );
     }
 
     public function testUser()

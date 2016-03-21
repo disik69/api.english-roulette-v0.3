@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Setting;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class SignController extends Controller
 {
@@ -40,13 +39,9 @@ class SignController extends Controller
 
             $user->assignRole('user');
 
-            try {
-                $response = response()->json(['token' => \JWTAuth::fromUser($user)]);
-            } catch (JWTException $e) {
-                $response = response()->json(['error' => 'Could not create token'], 500);
-            }
+            $response = response()->json(['token' => \JWTAuth::fromUser($user)]);
         } else {
-            $response = response()->json(['error' => 'Invalid fields'], 400);
+            $response = response()->json(['errors' => $validator->messages()->all()], 400);
         }
 
         return $response;
@@ -56,14 +51,10 @@ class SignController extends Controller
     {
         $credentials = \Request::only('email', 'password');
 
-        try {
-            if ($token = \JWTAuth::attempt($credentials)) {
-                $response = response()->json(['token' => $token]);
-            } else {
-                $response = response()->json(['error' => 'Invalid credentials'], 401);
-            }
-        } catch (JWTException $e) {
-            $response = response()->json(['error' => 'Could not create token'], 500);
+        if ($token = \JWTAuth::attempt($credentials)) {
+            $response = response()->json(['token' => $token]);
+        } else {
+            $response = response()->json(['errors' => ['The email/password is invalid.']], 400);
         }
 
         return $response;
@@ -84,9 +75,9 @@ class SignController extends Controller
         );
 
         if ($validator->passes()) {
-            $response = response()->json(['message' => 'Email free']);
+            $response = response()->json();
         } else {
-            $response = response()->json(['message' => 'Email busy'], 400);
+            $response = response()->json(['errors' => $validator->messages()->all()], 400);
         }
 
         return $response;
@@ -94,6 +85,20 @@ class SignController extends Controller
 
     public function debug()
     {
-        return response()->json(['message' => 'OK']);
+        $pasport['name'] = 'guest';
+        $pasport['roles'] = ['guest'];
+
+        try {
+            $user = \JWTAuth::parseToken()->authenticate();
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            $user = null;
+        }
+
+        if ($user) {
+            $pasport['name'] = $user->name;
+            $pasport['roles'] = array_values($user->getRoles());
+        }
+
+        return response()->json($pasport);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.1.26 (LTS) on 2016-02-15.
+ * Generated for Laravel 5.1.31 (LTS) on 2016-03-20.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -2110,6 +2110,30 @@ namespace {
         }
         
         /**
+         * Begin executing a new tags operation if the store supports it.
+         *
+         * @param string $name
+         * @return \Illuminate\Cache\TaggedCache 
+         * @deprecated since version 5.1. Use tags instead.
+         * @static 
+         */
+        public static function section($name){
+            return \Illuminate\Cache\Repository::section($name);
+        }
+        
+        /**
+         * Begin executing a new tags operation if the store supports it.
+         *
+         * @param array|mixed $names
+         * @return \Illuminate\Cache\TaggedCache 
+         * @throws \BadMethodCallException
+         * @static 
+         */
+        public static function tags($names){
+            return \Illuminate\Cache\Repository::tags($names);
+        }
+        
+        /**
          * Get the default cache time.
          *
          * @return int 
@@ -2505,11 +2529,12 @@ namespace {
          *
          * @param string $path
          * @param string $domain
+         * @param bool $secure
          * @return $this 
          * @static 
          */
-        public static function setDefaultPathAndDomain($path, $domain){
-            return \Illuminate\Cookie\CookieJar::setDefaultPathAndDomain($path, $domain);
+        public static function setDefaultPathAndDomain($path, $domain, $secure = false){
+            return \Illuminate\Cookie\CookieJar::setDefaultPathAndDomain($path, $domain, $secure);
         }
         
         /**
@@ -3377,6 +3402,52 @@ namespace {
         }
         
         /**
+         * Find a model by its primary key or return fresh model instance.
+         *
+         * @param mixed $id
+         * @param array $columns
+         * @return \Illuminate\Database\Eloquent\Model 
+         * @static 
+         */
+        public static function findOrNew($id, $columns = array()){
+            return \Illuminate\Database\Eloquent\Builder::findOrNew($id, $columns);
+        }
+        
+        /**
+         * Get the first record matching the attributes or instantiate it.
+         *
+         * @param array $attributes
+         * @return \Illuminate\Database\Eloquent\Model 
+         * @static 
+         */
+        public static function firstOrNew($attributes){
+            return \Illuminate\Database\Eloquent\Builder::firstOrNew($attributes);
+        }
+        
+        /**
+         * Get the first record matching the attributes or create it.
+         *
+         * @param array $attributes
+         * @return \Illuminate\Database\Eloquent\Model 
+         * @static 
+         */
+        public static function firstOrCreate($attributes){
+            return \Illuminate\Database\Eloquent\Builder::firstOrCreate($attributes);
+        }
+        
+        /**
+         * Create or update a record matching the attributes, and fill it with values.
+         *
+         * @param array $attributes
+         * @param array $values
+         * @return \Illuminate\Database\Eloquent\Model 
+         * @static 
+         */
+        public static function updateOrCreate($attributes, $values = array()){
+            return \Illuminate\Database\Eloquent\Builder::updateOrCreate($attributes, $values);
+        }
+        
+        /**
          * Execute the query and get the first result.
          *
          * @param array $columns
@@ -3440,11 +3511,11 @@ namespace {
          *
          * @param int $count
          * @param callable $callback
-         * @return void 
+         * @return bool 
          * @static 
          */
         public static function chunk($count, $callback){
-            \Illuminate\Database\Eloquent\Builder::chunk($count, $callback);
+            return \Illuminate\Database\Eloquent\Builder::chunk($count, $callback);
         }
         
         /**
@@ -4449,7 +4520,7 @@ namespace {
         /**
          * Determine if any rows exist for the current query.
          *
-         * @return bool|null 
+         * @return bool 
          * @static 
          */
         public static function exists(){
@@ -4870,7 +4941,7 @@ namespace {
     class File extends \Illuminate\Support\Facades\File{
         
         /**
-         * Determine if a file exists.
+         * Determine if a file or directory exists.
          *
          * @param string $path
          * @return bool 
@@ -10824,16 +10895,6 @@ namespace {
         }
         
         /**
-         * Remove data that was flashed for only the current request.
-         *
-         * @return void 
-         * @static 
-         */
-        public static function removeFlashNowData(){
-            \Illuminate\Session\Store::removeFlashNowData();
-        }
-        
-        /**
          * Checks if an attribute is defined.
          *
          * @param string $name The attribute name
@@ -11015,14 +11076,14 @@ namespace {
         }
         
         /**
-         * Remove an item from the session.
+         * Remove one or many items from the session.
          *
-         * @param string $key
+         * @param string|array $keys
          * @return void 
          * @static 
          */
-        public static function forget($key){
-            \Illuminate\Session\Store::forget($key);
+        public static function forget($keys){
+            \Illuminate\Session\Store::forget($keys);
         }
         
         /**
@@ -11626,7 +11687,7 @@ namespace {
          * @param string $path
          * @param array $data
          * @param array $mergeData
-         * @return \Illuminate\View\View 
+         * @return \Illuminate\Contracts\View\View 
          * @static 
          */
         public static function file($path, $data = array(), $mergeData = array()){
@@ -11651,7 +11712,7 @@ namespace {
          *
          * @param string $view
          * @param mixed $data
-         * @return \Illuminate\View\View 
+         * @return \Illuminate\Contracts\View\View 
          * @static 
          */
         public static function of($view, $data = array()){
@@ -11770,7 +11831,7 @@ namespace {
         /**
          * Call the composer for a given view.
          *
-         * @param \Illuminate\View\View $view
+         * @param \Illuminate\Contracts\View\View $view
          * @return void 
          * @static 
          */
@@ -11781,7 +11842,7 @@ namespace {
         /**
          * Call the creator for a given view.
          *
-         * @param \Illuminate\View\View $view
+         * @param \Illuminate\Contracts\View\View $view
          * @return void 
          * @static 
          */
@@ -12158,7 +12219,7 @@ namespace {
          * Invalidate a token (add it to the blacklist).
          *
          * @param mixed $token
-         * @return boolean 
+         * @return bool 
          * @static 
          */
         public static function invalidate($token = false){
@@ -12168,7 +12229,7 @@ namespace {
         /**
          * Get the token.
          *
-         * @return boolean|string 
+         * @return bool|string 
          * @static 
          */
         public static function getToken(){
@@ -12255,7 +12316,7 @@ namespace {
     class JWTFactory extends \Tymon\JWTAuth\Facades\JWTFactory{
         
         /**
-         * Create the Payload instance
+         * Create the Payload instance.
          *
          * @param array $customClaims
          * @return \Tymon\JWTAuth\Payload 
@@ -12266,7 +12327,7 @@ namespace {
         }
         
         /**
-         * Add an array of claims to the Payload
+         * Add an array of claims to the Payload.
          *
          * @param array $claims
          * @return $this 
@@ -12277,7 +12338,7 @@ namespace {
         }
         
         /**
-         * Add a claim to the Payload
+         * Add a claim to the Payload.
          *
          * @param string $name
          * @param mixed $value
@@ -12289,7 +12350,7 @@ namespace {
         }
         
         /**
-         * Build out the Claim DTO's
+         * Build out the Claim DTO's.
          *
          * @return array 
          * @static 
@@ -12299,7 +12360,7 @@ namespace {
         }
         
         /**
-         * Set the Issuer (iss) claim
+         * Set the Issuer (iss) claim.
          *
          * @return string 
          * @static 
@@ -12309,7 +12370,7 @@ namespace {
         }
         
         /**
-         * Set the Issued At (iat) claim
+         * Set the Issued At (iat) claim.
          *
          * @return int 
          * @static 
@@ -12319,7 +12380,7 @@ namespace {
         }
         
         /**
-         * Set the Expiration (exp) claim
+         * Set the Expiration (exp) claim.
          *
          * @return int 
          * @static 
@@ -12329,7 +12390,7 @@ namespace {
         }
         
         /**
-         * Set the Not Before (nbf) claim
+         * Set the Not Before (nbf) claim.
          *
          * @return int 
          * @static 
@@ -12339,7 +12400,7 @@ namespace {
         }
         
         /**
-         * Set the token ttl (in minutes)
+         * Set the token ttl (in minutes).
          *
          * @param int $ttl
          * @return $this 
@@ -12350,7 +12411,7 @@ namespace {
         }
         
         /**
-         * Get the token ttl
+         * Get the token ttl.
          *
          * @return int 
          * @static 
@@ -12360,14 +12421,63 @@ namespace {
         }
         
         /**
-         * Set the refresh flow
+         * Set the refresh flow.
          *
-         * @param boolean $refreshFlow
+         * @param bool $refreshFlow
          * @return $this 
          * @static 
          */
         public static function setRefreshFlow($refreshFlow = true){
             return \Tymon\JWTAuth\PayloadFactory::setRefreshFlow($refreshFlow);
+        }
+        
+    }
+
+
+    class Captcha extends \Mews\Captcha\Facades\Captcha{
+        
+        /**
+         * Create captcha image
+         *
+         * @param string $config
+         * @return \Mews\Captcha\ImageManager->response 
+         * @static 
+         */
+        public static function create($config = 'default'){
+            return \Mews\Captcha\Captcha::create($config);
+        }
+        
+        /**
+         * Captcha check
+         *
+         * @param $value
+         * @return bool 
+         * @static 
+         */
+        public static function check($value){
+            return \Mews\Captcha\Captcha::check($value);
+        }
+        
+        /**
+         * Generate captcha image source
+         *
+         * @param null $config
+         * @return string 
+         * @static 
+         */
+        public static function src($config = null){
+            return \Mews\Captcha\Captcha::src($config);
+        }
+        
+        /**
+         * Generate captcha image html tag
+         *
+         * @param null $config
+         * @return string 
+         * @static 
+         */
+        public static function img($config = null){
+            return \Mews\Captcha\Captcha::img($config);
         }
         
     }

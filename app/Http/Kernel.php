@@ -13,11 +13,11 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \App\Http\Middleware\EncryptCookies::class,
+//        \App\Http\Middleware\EncryptCookies::class,
         \App\Http\Middleware\CORS::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+//        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+//        \Illuminate\Session\Middleware\StartSession::class,
+//        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
 //        \App\Http\Middleware\VerifyCsrfToken::class,
     ];
 
@@ -27,11 +27,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'jwt.auth' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
-        'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
-        'acl' => \Kodeine\Acl\Middleware\HasPermission::class,
+//        'auth' => \App\Http\Middleware\Authenticate::class,
+//        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+//        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'jwt.auth' => \App\Http\Middleware\JWTGetUserFromToken::class,
+        'jwt.refresh' => \App\Http\Middleware\JWTRefreshToken::class,
+        'acl' => \App\Http\Middleware\AclHasPermission::class,
     ];
 }

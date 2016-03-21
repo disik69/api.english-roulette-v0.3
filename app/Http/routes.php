@@ -29,4 +29,4 @@ Route::get('/test-admin', [
 Route::post('signup', 'SignController@up');
 Route::post('signin', 'SignController@in');
 Route::get('check-email', 'SignController@checkEmail');
-Route::get('debug-token',['middleware' => 'jwt.auth', 'uses' => 'SignController@debug']);
+Route::get('debug-token', 'SignController@debug');

@@ -139,7 +139,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Kodeine\Acl\AclServiceProvider::class,
-        Mews\Captcha\CaptchaServiceProvider::class,
+        App\Captcha\CaptchaServiceProvider::class,
 
         /*
          * Application Service Providers...
