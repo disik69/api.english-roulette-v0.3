@@ -24,4 +24,9 @@ class Word extends Model
     {
         return $this->hasMany(Exercise::class);
     }
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
+    }
 }
