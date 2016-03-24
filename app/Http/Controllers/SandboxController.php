@@ -8,6 +8,7 @@ use App\User;
 use App\Word;
 use App\Translation;
 use App\Exercise;
+use Kodeine\Acl\Models\Eloquent\Role;
 
 class SandboxController extends Controller
 {
@@ -128,5 +129,15 @@ class SandboxController extends Controller
         $user = \Auth::user();
 
         return response()->json(compact('user'));
+    }
+
+    public function testPermissions()
+    {
+        $user = \Auth::user();
+
+        dd([
+            $user->getRoles(),
+            $user->getPermissions(),
+        ]);
     }
 }

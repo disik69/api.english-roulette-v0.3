@@ -4,7 +4,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Kodeine\Acl\Models\Eloquent\Role;
 
-
 class RoleTableSeeder extends Seeder
 {
     public function run()
