@@ -133,11 +133,20 @@ class SandboxController extends Controller
 
     public function testPermissions()
     {
+        \DB::enableQueryLog();
+
         $user = \Auth::user();
 
+//        $role = Role::create(['name' => 'test', 'slug' => 'test', 'description' => 'test']);
+
+//        $user->assignRole(Role::where('slug', 'test')->first());
+//        $user->revokeRole($role = Role::where('slug', 'test')->first());
+//        $role->delete();
+
         dd([
-            $user->getRoles(),
-            $user->getPermissions(),
+            $user->roles()->get()->toArray(),
+//            $user->getPermissions(),
+            \DB::getQueryLog(),
         ]);
     }
 }
