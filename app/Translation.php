@@ -16,11 +16,11 @@ class Translation extends Model
 
     public function word()
     {
-        return $this->belongsTo(Word::class);
+        return $this->belongsToMany(Word::class)->withTimestamps();
     }
 
     public function exercises()
     {
-        return $this->belongsToMany(Exercise::class);
+        return $this->belongsToMany(Exercise::class)->withTimestamps();
     }
 }

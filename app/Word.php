@@ -17,7 +17,7 @@ class Word extends Model
 
     public function translations()
     {
-        return $this->hasMany(Translation::class);
+        return $this->belongsToMany(Translation::class)->withTimestamps();
     }
 
     public function exercises()

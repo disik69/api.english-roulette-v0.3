@@ -29,6 +29,6 @@ class Exercise extends Model
 
     public function translations()
     {
-        return $this->belongsToMane(Translation::class);
+        return $this->belongsToMany(Translation::class)->withTimestamps();
     }
 }
