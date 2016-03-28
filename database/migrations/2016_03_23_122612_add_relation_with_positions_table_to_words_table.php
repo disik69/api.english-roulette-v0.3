@@ -15,7 +15,7 @@ class AddRelationWithPositionsTableToWordsTable extends Migration
         Schema::table('words', function (Blueprint $table) {
             $table->integer('position_id')->unsigned()->nullable()->after('ts');
 
-            $table->foreign('position_id')->references('id')->on('positions')->onDelete('cascade');
+            $table->foreign('position_id')->references('id')->on('positions');
         });
     }
 

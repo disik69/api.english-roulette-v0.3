@@ -27,8 +27,8 @@ class Exercise extends Model
         return $this->belongsTo(Word::class);
     }
 
-    public function translation()
+    public function translations()
     {
-        return $this->belongsTo(Translation::class);
+        return $this->belongsToMane(Translation::class);
     }
 }
