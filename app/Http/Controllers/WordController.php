@@ -62,15 +62,17 @@ class WordController extends Controller
                             $word->save();
                         } catch (QueryException $e) { continue; }
 
+                        $translationIds = [];
+
                         foreach ($definition->getTranslations() as $yaTranslation) {
                             if (! $translation = Translation::where('body', $yaTranslation->getText())->first()) {
-                                $translation = new Translation();
+                                $translation = Translation::create(['body' => $yaTranslation->getText()]);
                             }
 
-                            $translation->body = $yaTranslation->getText();
-
-                            $word->translations()->save($translation);
+                            $translationIds[] = $translation->id;
                         }
+
+                        $word->translations()->attach($translationIds);
                     }
 
                     $response = response('This word has created from the dictionary', 201);
@@ -78,7 +80,6 @@ class WordController extends Controller
                     $response = response()->json(['errors' => ['This word has not found in the dictionary.']], 404);
                 }
             } else {
-
                 $word = new Word();
 
                 $word->body = $request->get('body');
@@ -97,7 +98,6 @@ class WordController extends Controller
                 } catch (QueryException $e) {
                     $response = response()->json(['errors' => ['You have attempted to duplicate this word.']], 400);
                 }
-
             }
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);
