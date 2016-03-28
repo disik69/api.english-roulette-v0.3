@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.1.31 (LTS) on 2016-03-20.
+ * Generated for Laravel 5.1.31 (LTS) on 2016-03-26.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -12437,6 +12437,15 @@ namespace {
     class Captcha extends \Mews\Captcha\Facades\Captcha{
         
         /**
+         * 
+         *
+         * @static 
+         */
+        public static function check($value){
+            return \App\Captcha\Captcha::check($value);
+        }
+        
+        /**
          * Create captcha image
          *
          * @param string $config
@@ -12444,18 +12453,8 @@ namespace {
          * @static 
          */
         public static function create($config = 'default'){
-            return \Mews\Captcha\Captcha::create($config);
-        }
-        
-        /**
-         * Captcha check
-         *
-         * @param $value
-         * @return bool 
-         * @static 
-         */
-        public static function check($value){
-            return \Mews\Captcha\Captcha::check($value);
+            //Method inherited from \Mews\Captcha\Captcha            
+            return \App\Captcha\Captcha::create($config);
         }
         
         /**
@@ -12466,7 +12465,8 @@ namespace {
          * @static 
          */
         public static function src($config = null){
-            return \Mews\Captcha\Captcha::src($config);
+            //Method inherited from \Mews\Captcha\Captcha            
+            return \App\Captcha\Captcha::src($config);
         }
         
         /**
@@ -12477,7 +12477,393 @@ namespace {
          * @static 
          */
         public static function img($config = null){
-            return \Mews\Captcha\Captcha::img($config);
+            //Method inherited from \Mews\Captcha\Captcha            
+            return \App\Captcha\Captcha::img($config);
+        }
+        
+    }
+
+
+    class YaDictionary extends \App\YandexDictionary\YaDictionary{
+        
+        /**
+         * 
+         *
+         * @param string $apiKey
+         * @return $this 
+         * @static 
+         */
+        public static function setApiKey($apiKey){
+            return \Yandex\Dictionary\DictionaryClient::setApiKey($apiKey);
+        }
+        
+        /**
+         * 
+         *
+         * @param boolean $enabled optional boolean
+         * @return $this 
+         * @static 
+         */
+        public static function setFamilyFlag($enabled = true){
+            return \Yandex\Dictionary\DictionaryClient::setFamilyFlag($enabled);
+        }
+        
+        /**
+         * 
+         *
+         * @param boolean $enabled optional boolean
+         * @return $this 
+         * @static 
+         */
+        public static function setMorphoFlag($enabled = true){
+            return \Yandex\Dictionary\DictionaryClient::setMorphoFlag($enabled);
+        }
+        
+        /**
+         * 
+         *
+         * @param boolean $enabled optional boolean
+         * @return $this 
+         * @static 
+         */
+        public static function setPositionFilterFlag($enabled = true){
+            return \Yandex\Dictionary\DictionaryClient::setPositionFilterFlag($enabled);
+        }
+        
+        /**
+         * 
+         *
+         * @return integer 
+         * @static 
+         */
+        public static function getFlags(){
+            return \Yandex\Dictionary\DictionaryClient::getFlags();
+        }
+        
+        /**
+         * 
+         *
+         * @param integer $flag
+         * @param boolean $enabled optional boolean
+         * @return $this 
+         * @static 
+         */
+        public static function setFlag($flag, $enabled = true){
+            return \Yandex\Dictionary\DictionaryClient::setFlag($flag, $enabled);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getApiKey(){
+            return \Yandex\Dictionary\DictionaryClient::getApiKey();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $uiLanguage
+         * @return $this 
+         * @static 
+         */
+        public static function setUiLanguage($uiLanguage){
+            return \Yandex\Dictionary\DictionaryClient::setUiLanguage($uiLanguage);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getUiLanguage(){
+            return \Yandex\Dictionary\DictionaryClient::getUiLanguage();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $translateFrom
+         * @return $this 
+         * @static 
+         */
+        public static function setTranslateFrom($translateFrom){
+            return \Yandex\Dictionary\DictionaryClient::setTranslateFrom($translateFrom);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getTranslateFrom(){
+            return \Yandex\Dictionary\DictionaryClient::getTranslateFrom();
+        }
+        
+        /**
+         * 
+         *
+         * @param $translateTo
+         * @return $this 
+         * @static 
+         */
+        public static function setTranslateTo($translateTo){
+            return \Yandex\Dictionary\DictionaryClient::setTranslateTo($translateTo);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getTranslateTo(){
+            return \Yandex\Dictionary\DictionaryClient::getTranslateTo();
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getLanguage(){
+            return \Yandex\Dictionary\DictionaryClient::getLanguage();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $text
+         * @return string 
+         * @static 
+         */
+        public static function getLookupUrl($text){
+            return \Yandex\Dictionary\DictionaryClient::getLookupUrl($text);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getGetLanguagesUrl(){
+            return \Yandex\Dictionary\DictionaryClient::getGetLanguagesUrl();
+        }
+        
+        /**
+         * Looks up a text in the dictionary
+         *
+         * @param string $text
+         * @return array|bool 
+         * @throws DictionaryException
+         * @throws ForbiddenException
+         * @static 
+         */
+        public static function lookup($text){
+            return \Yandex\Dictionary\DictionaryClient::lookup($text);
+        }
+        
+        /**
+         * 
+         *
+         * @return array|bool 
+         * @throws DictionaryException
+         * @throws ForbiddenException
+         * @static 
+         */
+        public static function getLanguages(){
+            return \Yandex\Dictionary\DictionaryClient::getLanguages();
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getUserAgent(){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getUserAgent();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $accessToken
+         * @return self 
+         * @static 
+         */
+        public static function setAccessToken($accessToken){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::setAccessToken($accessToken);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getAccessToken(){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getAccessToken();
+        }
+        
+        /**
+         * 
+         *
+         * @param $proxy
+         * @return $this 
+         * @static 
+         */
+        public static function setProxy($proxy){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::setProxy($proxy);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getProxy(){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getProxy();
+        }
+        
+        /**
+         * 
+         *
+         * @param $debug
+         * @return $this 
+         * @static 
+         */
+        public static function setDebug($debug){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::setDebug($debug);
+        }
+        
+        /**
+         * 
+         *
+         * @return bool 
+         * @static 
+         */
+        public static function getDebug(){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getDebug();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $serviceDomain
+         * @return self 
+         * @static 
+         */
+        public static function setServiceDomain($serviceDomain){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::setServiceDomain($serviceDomain);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getServiceDomain(){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getServiceDomain();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $servicePort
+         * @return self 
+         * @static 
+         */
+        public static function setServicePort($servicePort){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::setServicePort($servicePort);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getServicePort(){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getServicePort();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $serviceScheme
+         * @return self 
+         * @static 
+         */
+        public static function setServiceScheme($serviceScheme = 'https'){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::setServiceScheme($serviceScheme);
+        }
+        
+        /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getServiceScheme(){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getServiceScheme();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $resource
+         * @return string 
+         * @static 
+         */
+        public static function getServiceUrl($resource = ''){
+            //Method inherited from \Yandex\Common\AbstractServiceClient            
+            return \Yandex\Dictionary\DictionaryClient::getServiceUrl($resource);
+        }
+        
+        /**
+         * 
+         *
+         * @param array $options
+         * @return void 
+         * @static 
+         */
+        public static function setSettings($options){
+            //Method inherited from \Yandex\Common\AbstractPackage            
+            \Yandex\Dictionary\DictionaryClient::setSettings($options);
+        }
+        
+        /**
+         * checkOptions
+         *
+         * @throws Exception\InvalidSettingsException
+         * @return void 
+         * @static 
+         */
+        public static function checkSettings(){
+            //Method inherited from \Yandex\Common\AbstractPackage            
+            \Yandex\Dictionary\DictionaryClient::checkSettings();
         }
         
     }

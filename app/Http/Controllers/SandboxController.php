@@ -149,4 +149,24 @@ class SandboxController extends Controller
             \DB::getQueryLog(),
         ]);
     }
+
+    public function yandexDictionary()
+    {
+        $result = \YaDictionary::lookup('abc');
+
+        foreach ($result as $dkey => $definition) {
+            $response[$dkey]['ts'] = $definition->getTranscription();
+            $response[$dkey]['position'] = $definition->getPartOfSpeech();
+            $response[$dkey]['body'] = $definition->getText();
+
+            foreach ($definition->getTranslations() as $tkey => $translation) {
+                $response[$dkey]['translations'][$tkey] = $translation->getText();
+            }
+        }
+
+        dd([
+            $result,
+            $response,
+        ]);
+    }
 }

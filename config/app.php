@@ -140,6 +140,7 @@ return [
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Kodeine\Acl\AclServiceProvider::class,
         App\Captcha\CaptchaServiceProvider::class,
+        App\YandexDictionary\YandexDictionaryProvider::class,
 
         /*
          * Application Service Providers...
@@ -200,6 +201,7 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
+        'YaDictionary' => \App\YandexDictionary\YaDictionary::class,
 
     ],
 

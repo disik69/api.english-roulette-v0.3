@@ -18,6 +18,8 @@ Route::get('create-collocations', 'SandboxController@createCollocations');
 Route::get('create-exercise', 'SandboxController@createExercise');
 Route::get('user/{id}/exercises', 'SandboxController@getUserExercises');
 
+Route::get('yandex-dictionary', 'SandboxController@yandexDictionary');
+
 Route::get('check-captcha', 'SandboxController@checkCaptcha');
 
 Route::get('test-user', [

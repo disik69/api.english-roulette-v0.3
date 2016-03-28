@@ -10,7 +10,8 @@
         "barryvdh/laravel-ide-helper": "^2.1",
         "tymon/jwt-auth": "0.5.*",
         "mews/captcha": "^2.1",
-        "kodeine/laravel-acl": "dev-master"
+        "kodeine/laravel-acl": "dev-master",
+        "nixsolutions/yandex-php-library": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
