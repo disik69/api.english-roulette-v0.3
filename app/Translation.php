@@ -14,7 +14,7 @@ class Translation extends Model
 {
     protected $fillable = ['body'];
 
-    public function word()
+    public function words()
     {
         return $this->belongsToMany(Word::class)->withTimestamps();
     }
