@@ -19,7 +19,55 @@ class WordController extends Controller
      */
     public function index()
     {
-        echo('word index');
+        if ($body = \Request::get('body')) {
+            $result = Word::with('position')->where('body', $body)->get();
+
+            $words = [];
+            foreach ($result as $key => $item) {
+                $words[$key]['id'] = $item->id;
+                $words[$key]['body'] = $item->body;
+                $words[$key]['ts'] = $item->ts;
+                $words[$key]['position'] = $item->position->body;
+            }
+
+            if (count($words) > 0) {
+                $response = response()->json($words);
+            } else {
+                $response = response()->json(['errors' => ['The word hasn\'t found.']], 404);
+            }
+        } else if ($search = \Request::get('search')) {
+            $words = Word::select('body')  ->where('body', 'LIKE', "$search%")
+                                            ->groupBy('body')
+                                            ->take(\Request::get('limit') ?: 5)
+                                            ->get()
+                                            ->lists('body');
+
+            if (count($words) > 0) {
+                $response = response()->json($words);
+            } else {
+                $response = response()->json(['errors' => ['The matched words haven\'t found.']], 404);
+            }
+        } else {
+            $result = Word::with('position')->paginate(\Request::get('limit') ?: 10);
+
+            $page['current_page'] = $result->currentPage();
+            $page['last_page'] = $result->lastPage();
+            $page['data'] = [];
+            foreach ($result as $key => $item) {
+                $page['data'][$key]['id'] = $item->id;
+                $page['data'][$key]['body'] = $item->body;
+                $page['data'][$key]['ts'] = $item->ts;
+                $page['data'][$key]['position'] = $item->position->body;
+            }
+
+            if (count($page['data']) > 0) {
+                $response = response()->json($page);
+            } else {
+                $response = response()->json(['errors' => ['There aren\'t words.']], 404);
+            }
+        }
+
+        return $response;
     }
 
     /**
