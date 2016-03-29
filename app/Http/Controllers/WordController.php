@@ -34,8 +34,7 @@ class WordController extends Controller
             $request->all(),
             [
                 'body' => 'required',
-                'ts' => 'sometimes',
-                'position_id' => 'sometimes|exists:positions,id',
+                'translation_id' => 'sometimes|exists:translations,id',
                 'via_dictionary' => 'sometimes|boolean',
             ]
         );
@@ -52,27 +51,27 @@ class WordController extends Controller
                             $position = Position::create(['body' => $partOfSpeech]);
                         }
 
-                        $word = new Word();
+                        if (! Word::where('body', $definition->getText())->where('position_id', $position->id)->first()) {
+                            $word = new Word();
 
-                        $word->body = $definition->getText();
-                        $word->ts = $definition->getTranscription();
-                        $word->position()->associate($position);
+                            $word->body = $definition->getText();
+                            $word->ts = $definition->getTranscription();
+                            $word->position()->associate($position);
 
-                        try {
                             $word->save();
-                        } catch (QueryException $e) { continue; }
 
-                        $translationIds = [];
+                            $translationIds = [];
 
-                        foreach ($definition->getTranslations() as $yaTranslation) {
-                            if (! $translation = Translation::where('body', $yaTranslation->getText())->first()) {
-                                $translation = Translation::create(['body' => $yaTranslation->getText()]);
+                            foreach ($definition->getTranslations() as $yaTranslation) {
+                                if (! $translation = Translation::where('body', $yaTranslation->getText())->first()) {
+                                    $translation = Translation::create(['body' => $yaTranslation->getText()]);
+                                }
+
+                                $translationIds[] = $translation->id;
                             }
 
-                            $translationIds[] = $translation->id;
+                            $word->translations()->attach($translationIds);
                         }
-
-                        $word->translations()->attach($translationIds);
                     }
 
                     $response = response('This word has created from the dictionary', 201);
@@ -80,24 +79,13 @@ class WordController extends Controller
                     $response = response()->json(['errors' => ['This word has not found in the dictionary.']], 404);
                 }
             } else {
-                $word = new Word();
+                $word = Word::create(['body' => $request->get('body')]);
 
-                $word->body = $request->get('body');
-
-                if ($ts = $request->get('ts')) {
-                    $word->ts = $ts;
-                }
-                if ($positionId = $request->get('position_id')) {
-                    $word->position()->associate(Position::find($positionId));
+                if ($translationId = $request->get('translation_id')) {
+                    $word->translations()->attach($translationId);
                 }
 
-                try {
-                    $word->save();
-
-                    $response = response()->json(['id' => $word->id], 201);
-                } catch (QueryException $e) {
-                    $response = response()->json(['errors' => ['You have attempted to duplicate this word.']], 400);
-                }
+                $response = response()->json(['id' => $word->id], 201);
             }
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);

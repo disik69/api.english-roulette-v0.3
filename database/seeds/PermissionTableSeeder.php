@@ -82,7 +82,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'position',
         ]);
 
-        Role::where('slug', 'user')->first()->assignPermission([$exercisePermission, $userWordPermission, $userTranslationPermission, $positionPermission]);
+        Role::where('slug', 'user')->first()->assignPermission([$exercisePermission, $userWordPermission, $userTranslationPermission]);
         Role::where('slug', 'admin')->first()->assignPermission([$wordPermission, $translationPermission, $positionPermission]);
     }
 }

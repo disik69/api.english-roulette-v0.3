@@ -80,7 +80,7 @@ Route::group([
 });
 Route::group([
     'middleware' => ['jwt.auth', 'acl'],
-    'is' => 'user|admin',
+    'is' => 'admin',
     'protect_alias' => 'position',
     'protect_methods' => $protectMethods,
 ], function () {
