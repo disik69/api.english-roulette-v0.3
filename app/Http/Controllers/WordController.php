@@ -20,14 +20,20 @@ class WordController extends Controller
     public function index()
     {
         if ($body = \Request::get('body')) {
-            $result = Word::with('position')->where('body', $body)->get();
+            $result = Word::with('position', 'translations')->where('body', $body)->get();
 
             $words = [];
             foreach ($result as $key => $item) {
-                $words[$key]['id'] = $item->id;
+                $words[$key]['id'] = $item->getId();
                 $words[$key]['body'] = $item->body;
                 $words[$key]['ts'] = $item->ts;
                 $words[$key]['position'] = $item->position->body;
+                $words[$key]['translation'] = [];
+
+                foreach ($item->translations as $_key => $translation) {
+                    $words[$key]['translation'][$_key]['id'] = $translation->getId();
+                    $words[$key]['translation'][$_key]['body'] = $translation->body;
+                }
             }
 
             if (count($words) > 0) {
@@ -36,7 +42,7 @@ class WordController extends Controller
                 $response = response()->json(['errors' => ['The word hasn\'t found.']], 404);
             }
         } else if ($search = \Request::get('search')) {
-            $words = Word::select('body')  ->where('body', 'LIKE', "$search%")
+            $words = Word::select('body')   ->where('body', 'LIKE', "$search%")
                                             ->groupBy('body')
                                             ->take(\Request::get('limit') ?: 5)
                                             ->get()
@@ -54,7 +60,7 @@ class WordController extends Controller
             $page['last_page'] = $result->lastPage();
             $page['data'] = [];
             foreach ($result as $key => $item) {
-                $page['data'][$key]['id'] = $item->id;
+                $page['data'][$key]['id'] = $item->getId();
                 $page['data'][$key]['body'] = $item->body;
                 $page['data'][$key]['ts'] = $item->ts;
                 $page['data'][$key]['position'] = $item->position->body;
