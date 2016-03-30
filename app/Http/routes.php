@@ -22,6 +22,8 @@ Route::get('yandex-dictionary', 'SandboxController@yandexDictionary');
 
 Route::get('check-captcha', 'SandboxController@checkCaptcha');
 
+Route::get('get-exercise/{exercise}', 'SandboxController@getExercise');
+
 Route::get('test-user', [
     'middleware' => ['jwt.auth', 'acl'],
     'is' => 'user', 'uses' => 'SandboxController@testUser'

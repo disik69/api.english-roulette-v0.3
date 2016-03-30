@@ -169,4 +169,9 @@ class SandboxController extends Controller
             $response,
         ]);
     }
+
+    public function getExercise(Exercise $exercise)
+    {
+        dd($exercise);
+    }
 }

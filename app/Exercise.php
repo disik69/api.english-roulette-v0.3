@@ -29,4 +29,14 @@ class Exercise extends Model
     {
         return $this->belongsToMany(Translation::class)->withTimestamps();
     }
+
+    public function setNewStatus()
+    {
+        $this->status = 'new';
+    }
+
+    public function setOldStatus()
+    {
+        $this->status = 'old';
+    }
 }

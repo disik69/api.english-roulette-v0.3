@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -50,6 +51,8 @@ class Handler extends ExceptionHandler
             return response()->json(['errors' => ['The access token is invalid.']], $e->getStatusCode());
         } else if ($e instanceof \Tymon\JWTAuth\Exceptions\JWTException) {
             return response()->json(['errors' => ['The internal server error is occured.']], $e->getStatusCode());
+        } else if (($e instanceof NotFoundHttpException) || ($e instanceof MethodNotAllowedHttpException)) {
+            return response()->json(['errors' => ['The resource hasn\'t found.']], 404);
         }
 
         return parent::render($request, $e);

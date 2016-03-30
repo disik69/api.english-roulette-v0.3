@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
+use App\Exercise;
+use App\Word;
 
 class ExerciseController extends Controller
 {
@@ -26,7 +28,33 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {
-        echo('exercise store');
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'word_id' => 'required|exists:words,id',
+            ]
+        );
+
+        if ($validator->passes()) {
+            $user = \Auth::user();
+            $word = Word::find($request->get('word_id'));
+
+            $exercise = new Exercise();
+
+            $exercise->reading = $user->reading_count;
+            $exercise->memory = $user->memory_count;
+
+            $exercise->user()->associate($user);
+            $exercise->word()->associate($word);
+
+            $exercise->save();
+
+            $response = response()->json(['id' => $exercise->getId()], 201);
+        } else {
+            $response = response()->json(['errors' => $validator->messages()->all()], 400);
+        }
+
+        return $response;
     }
 
     /**
