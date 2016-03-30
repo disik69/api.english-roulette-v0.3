@@ -14,8 +14,8 @@ class SettingTableSeeder extends Seeder
     {
         \DB::table('settings')->delete();
 
-        Setting::create(['key' => 'reading_count', 'value' => 10]);
-        Setting::create(['key' => 'memory_count', 'value' => 10]);
+        Setting::create(['key' => 'reading_count', 'value' => 7]);
+        Setting::create(['key' => 'memory_count', 'value' => 7]);
         Setting::create(['key' => 'repeat_term', 'value' => 7]);
     }
 }
