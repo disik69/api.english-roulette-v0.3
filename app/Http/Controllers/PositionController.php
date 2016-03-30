@@ -15,6 +15,6 @@ class PositionController extends Controller
      */
     public function index()
     {
-        return response()->json(\App\Position::all()->lists('body', 'id'));
+        echo 'position index';
     }
 }
