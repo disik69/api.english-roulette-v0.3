@@ -83,14 +83,14 @@ class TranslationController extends Controller
 
                     $translation->words()->attach($word);
 
-                    $response = response()->json(['id' => $translation->id], 201);
+                    $response = response()->json(['id' => $translation->getId()], 201);
                 } else {
                     $response = response()->json(['errors' => ['You have attempted to bind a translation with a non-custom word']], 400);
                 }
             } else {
                 $translation = Translation::create(['body' => $request->get('body')]);
 
-                $response = response()->json(['id' => $translation->id], 201);
+                $response = response()->json(['id' => $translation->getId()], 201);
             }
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);

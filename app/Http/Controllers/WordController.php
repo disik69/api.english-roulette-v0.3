@@ -139,7 +139,7 @@ class WordController extends Controller
                     $word->translations()->attach($translationId);
                 }
 
-                $response = response()->json(['id' => $word->id], 201);
+                $response = response()->json(['id' => $word->getId()], 201);
             }
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);
