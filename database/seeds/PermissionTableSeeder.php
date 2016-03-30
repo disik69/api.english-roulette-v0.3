@@ -29,6 +29,15 @@ class PermissionTableSeeder extends Seeder
             ],
             'description' => 'exercise',
         ]);
+        $exerciseTranslationPermission = Permission::create([
+            'name'        => 'exercise.translation',
+            'slug'        => [
+                'index' => true,
+                'store' => true,
+                'destroy' => true,
+            ],
+            'description' => 'exercise.translation',
+        ]);
 
         $wordPermission = Permission::create([
             'name'        => 'word',
@@ -82,7 +91,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'position',
         ]);
 
-        Role::where('slug', 'user')->first()->assignPermission([$exercisePermission, $userWordPermission, $userTranslationPermission]);
+        Role::where('slug', 'user')->first()->assignPermission([$exercisePermission, $exerciseTranslationPermission, $userWordPermission, $userTranslationPermission]);
         Role::where('slug', 'admin')->first()->assignPermission([$wordPermission, $translationPermission, $positionPermission]);
     }
 }

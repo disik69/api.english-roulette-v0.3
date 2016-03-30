@@ -144,8 +144,8 @@ class SandboxController extends Controller
 //        $role->delete();
 
         dd([
-            $user->roles()->get()->toArray(),
-//            $user->getPermissions(),
+//            $user->roles()->get()->toArray(),
+            $user->getPermissions(),
             \DB::getQueryLog(),
         ]);
     }

@@ -64,6 +64,14 @@ Route::group([
 });
 Route::group([
     'middleware' => ['jwt.auth', 'acl'],
+    'is' => 'user',
+    'protect_alias' => 'exercise.translation',
+    'protect_methods' => $protectMethods,
+], function () {
+    Route::resource('exercise.translation', 'ExerciseTranslationController', ['only' => ['index', 'store', 'destroy']]);
+});
+Route::group([
+    'middleware' => ['jwt.auth', 'acl'],
     'is' => 'user|admin',
     'protect_alias' => 'word',
     'protect_methods' => $protectMethods,
