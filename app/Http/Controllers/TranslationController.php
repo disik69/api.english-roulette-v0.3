@@ -17,7 +17,45 @@ class TranslationController extends Controller
      */
     public function index()
     {
-        echo('translation index');
+        if ($body = \Request::get('body')) {
+            $translation = Translation::where('body', $body)->first();
+
+            if ($translation) {
+                $response = response()->json(['id' => $translation->getId(), 'body' => $translation->body]);
+            } else {
+                $response = response()->json(['errors' => ['The translation hasn\'t found.']], 404);
+            }
+        } else if ($search = \Request::get('search')) {
+            $translations = Translation::select('body') ->where('body', 'LIKE', "$search%")
+                                                        ->groupBy('body')
+                                                        ->take(\Request::get('limit') ?: 5)
+                                                        ->get()
+                                                        ->lists('body');
+
+            if (count($translations) > 0) {
+                $response = response()->json($translations);
+            } else {
+                $response = response()->json(['errors' => ['The matched translations haven\'t found.']], 404);
+            }
+        } else {
+            $result = Translation::paginate(\Request::get('limit') ?: 10);
+
+            $page['current_page'] = $result->currentPage();
+            $page['last_page'] = $result->lastPage();
+            $page['data'] = [];
+            foreach ($result as $key => $item) {
+                $page['data'][$key]['id'] = $item->getId();
+                $page['data'][$key]['body'] = $item->body;
+            }
+
+            if (count($page['data']) > 0) {
+                $response = response()->json($page);
+            } else {
+                $response = response()->json(['errors' => ['There aren\'t translations.']], 404);
+            }
+        }
+
+        return $response;
     }
 
     /**
