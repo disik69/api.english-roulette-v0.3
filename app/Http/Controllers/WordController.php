@@ -21,13 +21,16 @@ class WordController extends Controller
     {
         if ($body = \Request::get('body')) {
             $result = Word::with('position', 'translations')->where('body', $body)->get();
+            $exercises = \Auth::user()->exercises;
 
             $words = [];
             foreach ($result as $key => $item) {
+
                 $words[$key]['id'] = $item->getId();
                 $words[$key]['body'] = $item->body;
                 $words[$key]['ts'] = $item->ts;
-                $words[$key]['position'] = $item->position->body;
+                $words[$key]['position'] = $item->position ? $item->position->body : null;
+                $words[$key]['used'] = $exercises->contains('word_id', $item->id) ? true : false;
                 $words[$key]['translation'] = [];
 
                 foreach ($item->translations as $_key => $translation) {
@@ -41,8 +44,8 @@ class WordController extends Controller
             } else {
                 $response = response()->json(['errors' => ['The word hasn\'t found.']], 404);
             }
-        } else if ($search = \Request::get('search')) {
-            $words = Word::select('body')   ->where('body', 'LIKE', "$search%")
+        } else if ($autocomplete = \Request::get('autocomplete')) {
+            $words = Word::select('body')   ->where('body', 'LIKE', "$autocomplete%")
                                             ->groupBy('body')
                                             ->take(\Request::get('limit') ?: 5)
                                             ->get()
@@ -63,7 +66,7 @@ class WordController extends Controller
                 $page['data'][$key]['id'] = $item->getId();
                 $page['data'][$key]['body'] = $item->body;
                 $page['data'][$key]['ts'] = $item->ts;
-                $page['data'][$key]['position'] = $item->position->body;
+                $page['data'][$key]['position'] = $item->position ? $item->position->body : null;
             }
 
             if (count($page['data']) > 0) {
@@ -80,6 +83,7 @@ class WordController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -88,7 +92,6 @@ class WordController extends Controller
             $request->all(),
             [
                 'body' => 'required',
-                'translation_id' => 'sometimes|exists:translations,id',
                 'via_dictionary' => 'sometimes|boolean',
             ]
         );
@@ -135,10 +138,6 @@ class WordController extends Controller
             } else {
                 $word = Word::create(['body' => $request->get('body')]);
 
-                if ($translationId = $request->get('translation_id')) {
-                    $word->translations()->attach($translationId);
-                }
-
                 $response = response()->json(['id' => $word->getId()], 201);
             }
         } else {
@@ -151,10 +150,11 @@ class WordController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Word $word
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($word)
     {
         echo('word show');
     }
@@ -163,10 +163,11 @@ class WordController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Word $word
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $word)
     {
         echo('word update');
     }
@@ -174,10 +175,11 @@ class WordController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Word $word
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($word)
     {
         echo('word destoy');
     }

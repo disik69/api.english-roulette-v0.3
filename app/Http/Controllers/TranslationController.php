@@ -25,9 +25,8 @@ class TranslationController extends Controller
             } else {
                 $response = response()->json(['errors' => ['The translation hasn\'t found.']], 404);
             }
-        } else if ($search = \Request::get('search')) {
-            $translations = Translation::select('body') ->where('body', 'LIKE', "$search%")
-                                                        ->groupBy('body')
+        } else if ($autocomplete = \Request::get('autocomplete')) {
+            $translations = Translation::select('body') ->where('body', 'LIKE', "$autocomplete%")
                                                         ->take(\Request::get('limit') ?: 5)
                                                         ->get()
                                                         ->lists('body');
@@ -62,6 +61,7 @@ class TranslationController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -70,28 +70,13 @@ class TranslationController extends Controller
             $request->all(),
             [
                 'body' => 'required|unique:translations,body',
-                'word_id' => 'sometimes|exists:words,id',
             ]
         );
 
         if ($validator->passes()) {
-            if ($wordId = $request->get('word_id')) {
-                $word = Word::find($wordId);
+            $translation = Translation::create(['body' => $request->get('body')]);
 
-                if (is_null($word->position)) {
-                    $translation = Translation::create(['body' => $request->get('body')]);
-
-                    $translation->words()->attach($word);
-
-                    $response = response()->json(['id' => $translation->getId()], 201);
-                } else {
-                    $response = response()->json(['errors' => ['You have attempted to bind a translation with a non-custom word']], 400);
-                }
-            } else {
-                $translation = Translation::create(['body' => $request->get('body')]);
-
-                $response = response()->json(['id' => $translation->getId()], 201);
-            }
+            $response = response()->json(['id' => $translation->getId()], 201);
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);
         }
@@ -102,10 +87,11 @@ class TranslationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Translation $translation
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($translation)
     {
         echo('translation show');
     }
@@ -114,10 +100,11 @@ class TranslationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Translation $translation
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $translation)
     {
         echo('translation update');
     }
@@ -125,10 +112,11 @@ class TranslationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Translation $translation
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($translation)
     {
         echo('translation destroy');
     }

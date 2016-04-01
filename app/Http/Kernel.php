@@ -30,6 +30,7 @@ class Kernel extends HttpKernel
 //        'auth' => \App\Http\Middleware\Authenticate::class,
 //        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
 //        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'exercise_owner' => \App\Http\Middleware\ExerciseOwner::class,
         'jwt.auth' => \App\Http\Middleware\JWTGetUserFromToken::class,
         'jwt.refresh' => \App\Http\Middleware\JWTRefreshToken::class,
         'acl' => \App\Http\Middleware\AclHasPermission::class,

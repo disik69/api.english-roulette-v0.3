@@ -30,13 +30,13 @@ class PermissionTableSeeder extends Seeder
             'description' => 'exercise',
         ]);
         $exerciseTranslationPermission = Permission::create([
-            'name'        => 'exercise.translation',
+            'name'        => 'exercise_translation',
             'slug'        => [
                 'index' => true,
                 'store' => true,
                 'destroy' => true,
             ],
-            'description' => 'exercise.translation',
+            'description' => 'exercise_translation',
         ]);
 
         $wordPermission = Permission::create([
@@ -50,7 +50,7 @@ class PermissionTableSeeder extends Seeder
             ],
             'description' => 'word',
         ]);
-        $userWordPermission = Permission::create([
+        $wordPermissionForUser = Permission::create([
             'name'        => 'word.user',
             'slug'        => [
                 'show' => false,
@@ -59,6 +59,26 @@ class PermissionTableSeeder extends Seeder
             ],
             'inherit_id' => $wordPermission->getKey(),
             'description' => 'word',
+        ]);
+
+        $wordTranslationPermission = Permission::create([
+            'name'        => 'word_translation',
+            'slug'        => [
+                'index' => true,
+                'store' => true,
+                'destroy' => true,
+            ],
+            'description' => 'word_translation',
+        ]);
+        $wordTranslationPermissionForUser = Permission::create([
+            'name'        => 'word_translation.user',
+            'slug'        => [
+                'index' => true,
+                'store' => true,
+                'destroy' => false,
+            ],
+            'inherit_id' => $wordTranslationPermission->getKey(),
+            'description' => 'word_translation.user',
         ]);
 
         $translationPermission = Permission::create([
@@ -72,7 +92,7 @@ class PermissionTableSeeder extends Seeder
             ],
             'description' => 'translation',
         ]);
-        $userTranslationPermission = Permission::create([
+        $translationPermissionForUser = Permission::create([
             'name'        => 'translation.user',
             'slug'        => [
                 'show' => false,
@@ -80,7 +100,7 @@ class PermissionTableSeeder extends Seeder
                 'destroy' => false,
             ],
             'inherit_id' => $translationPermission->getKey(),
-            'description' => 'translation',
+            'description' => 'translation.user',
         ]);
 
         $positionPermission = Permission::create([
@@ -91,7 +111,18 @@ class PermissionTableSeeder extends Seeder
             'description' => 'position',
         ]);
 
-        Role::where('slug', 'user')->first()->assignPermission([$exercisePermission, $exerciseTranslationPermission, $userWordPermission, $userTranslationPermission]);
-        Role::where('slug', 'admin')->first()->assignPermission([$wordPermission, $translationPermission, $positionPermission]);
+        Role::where('slug', 'user')->first()->assignPermission([
+            $exercisePermission,
+            $exerciseTranslationPermission,
+            $wordTranslationPermissionForUser,
+            $wordPermissionForUser,
+            $translationPermissionForUser
+        ]);
+        Role::where('slug', 'admin')->first()->assignPermission([
+            $wordPermission,
+            $wordTranslationPermission,
+            $translationPermission,
+            $positionPermission
+        ]);
     }
 }

@@ -57,7 +57,7 @@ Route::get('check-email', 'SignController@checkEmail');
 Route::get('debug-token', 'SignController@debug');
 
 Route::group([
-    'middleware' => ['jwt.auth', 'acl'],
+    'middleware' => ['jwt.auth', 'acl', 'exercise_owner'],
     'is' => 'user',
     'protect_alias' => 'exercise',
     'protect_methods' => $protectMethods,
@@ -65,13 +65,14 @@ Route::group([
     Route::resource('exercise', 'ExerciseController', ['except' => ['create', 'edit']]);
 });
 Route::group([
-    'middleware' => ['jwt.auth', 'acl'],
+    'middleware' => ['jwt.auth', 'acl', 'exercise_owner'],
     'is' => 'user',
-    'protect_alias' => 'exercise.translation',
+    'protect_alias' => 'exercise_translation',
     'protect_methods' => $protectMethods,
 ], function () {
     Route::resource('exercise.translation', 'ExerciseTranslationController', ['only' => ['index', 'store', 'destroy']]);
 });
+
 Route::group([
     'middleware' => ['jwt.auth', 'acl'],
     'is' => 'user|admin',
@@ -83,11 +84,21 @@ Route::group([
 Route::group([
     'middleware' => ['jwt.auth', 'acl'],
     'is' => 'user|admin',
+    'protect_alias' => 'word_translation',
+    'protect_methods' => $protectMethods,
+], function () {
+    Route::resource('word.translation', 'WordTranslationController', ['only' => ['index', 'store', 'destroy']]);
+});
+
+Route::group([
+    'middleware' => ['jwt.auth', 'acl'],
+    'is' => 'user|admin',
     'protect_alias' => 'translation',
     'protect_methods' => $protectMethods,
 ], function () {
     Route::resource('translation', 'TranslationController', ['except' => ['create', 'edit']]);
 });
+
 Route::group([
     'middleware' => ['jwt.auth', 'acl'],
     'is' => 'admin',

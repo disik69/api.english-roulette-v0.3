@@ -18,13 +18,28 @@ class ExerciseTranslationController extends Controller
      */
     public function index(Exercise $exercise)
     {
+        $result = $exercise->translations;
 
+        $translations = [];
+        foreach ($result as $key => $item) {
+            $translations[$key]['id'] = $item->getId();
+            $translations[$key]['body'] = $item->body;
+        }
+
+        if (count($translations) > 0) {
+            $response = response()->json($translations);
+        } else {
+            $response = response()->json(['errors' => ['There aren\'t translations.']], 404);
+        }
+
+        return $response;
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, Exercise $exercise)
@@ -62,7 +77,9 @@ class ExerciseTranslationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Exercise $exercise
+     * @param  \App\Translation $translation
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Exercise $exercise, Translation $translation)

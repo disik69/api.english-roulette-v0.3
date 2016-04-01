@@ -51,8 +51,10 @@ class Handler extends ExceptionHandler
             return response()->json(['errors' => ['The access token is invalid.']], $e->getStatusCode());
         } else if ($e instanceof \Tymon\JWTAuth\Exceptions\JWTException) {
             return response()->json(['errors' => ['The internal server error is occured.']], $e->getStatusCode());
-        } else if (($e instanceof NotFoundHttpException) || ($e instanceof MethodNotAllowedHttpException)) {
-            return response()->json(['errors' => ['The resource hasn\'t found.']], 404);
+        } else if ($e instanceof NotFoundHttpException) {
+            return response()->json(['errors' => ['The resource hasn\'t found.']], $e->getStatusCode());
+        } else if ($e instanceof MethodNotAllowedHttpException) {
+            return response()->json(['errors' => ['The method doesn\'t allowed for this resource.']], $e->getStatusCode());
         }
 
         return parent::render($request, $e);

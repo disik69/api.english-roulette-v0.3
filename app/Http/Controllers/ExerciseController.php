@@ -24,6 +24,7 @@ class ExerciseController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -37,19 +38,23 @@ class ExerciseController extends Controller
 
         if ($validator->passes()) {
             $user = \Auth::user();
-            $word = Word::find($request->get('word_id'));
+            $wordId = $request->get('word_id');
 
-            $exercise = new Exercise();
+            if (! $user->exercises->contains('word_id', $wordId)) {
+                $exercise = new Exercise();
 
-            $exercise->reading = $user->reading_count;
-            $exercise->memory = $user->memory_count;
+                $exercise->reading = $user->reading_count;
+                $exercise->memory = $user->memory_count;
 
-            $exercise->user()->associate($user);
-            $exercise->word()->associate($word);
+                $exercise->user()->associate($user);
+                $exercise->word()->associate($wordId);
 
-            $exercise->save();
+                $exercise->save();
 
-            $response = response()->json(['id' => $exercise->getId()], 201);
+                $response = response()->json(['id' => $exercise->getId()], 201);
+            } else {
+                $response = response()->json(['errors' => ['You already have this word in your exercises.']], 400);
+            }
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);
         }
@@ -60,10 +65,11 @@ class ExerciseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Exercise  $exercise
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($exercise)
     {
         echo('exercise show');
     }
@@ -72,10 +78,11 @@ class ExerciseController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Exercise  $exercise
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $exercise)
     {
         echo('exercise update');
     }
@@ -83,10 +90,11 @@ class ExerciseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Exercise  $exercise
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($exercise)
     {
         echo('exercise destroy');
     }
