@@ -84,12 +84,16 @@ class ExerciseTranslationController extends Controller
      */
     public function destroy(Exercise $exercise, Translation $translation)
     {
-        if ($exercise->translations()->find($translation->id)) {
-            $exercise->translations()->detach($translation);
+        if (count($exercise->translations) > 1) {
+            if ($exercise->translations()->find($translation->id)) {
+                $exercise->translations()->detach($translation);
 
-            $response = response('This translation has deleted.', 200);
+                $response = response('This translation has deleted.', 200);
+            } else {
+                $response = response()->json(['errors' => ['This translation hasn\'t found in the exercise word.']], 404);
+            }
         } else {
-            $response = response()->json(['errors' => ['This translation hasn\'t found in the exercise word.']], 404);
+            $response = response()->json(['errors' => ['Exercise can\'t exist without translations.']], 400);
         }
 
         return $response;

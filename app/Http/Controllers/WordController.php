@@ -92,6 +92,7 @@ class WordController extends Controller
             $request->all(),
             [
                 'body' => 'required',
+                'translation_id' => 'sometimes|exists:translations,id',
                 'via_dictionary' => 'sometimes|boolean',
             ]
         );
@@ -136,9 +137,16 @@ class WordController extends Controller
                     $response = response()->json(['errors' => ['This word has not found in the dictionary.']], 404);
                 }
             } else {
-                $word = Word::create(['body' => $request->get('body')]);
+                if ($translationId = $request->get('translation_id')) {
+                    $word = Word::create(['body' => $request->get('body')]);
 
-                $response = response()->json(['id' => $word->getId()], 201);
+                    $word->translations()->attach($translationId);
+
+                    $response = response()->json(['id' => $word->getId()], 201);
+                } else {
+                    $response = response()->json(['errors' => ['It needs a translation.']], 400);
+                }
+
             }
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);
