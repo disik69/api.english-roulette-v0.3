@@ -17,5 +17,6 @@ class SettingTableSeeder extends Seeder
         Setting::create(['key' => 'reading_count', 'value' => 7]);
         Setting::create(['key' => 'memory_count', 'value' => 7]);
         Setting::create(['key' => 'repeat_term', 'value' => 7]);
+        Setting::create(['key' => 'lesson_size', 'value' => 30]);
     }
 }

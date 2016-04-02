@@ -21,6 +21,7 @@ class UserTableSeeder extends Seeder
             'memory_count' => $settings['memory_count'],
             'reading_count' => $settings['reading_count'],
             'repeat_term' => $settings['repeat_term'],
+            'lesson_size' => $settings['lesson_size'],
         ]);
         $admin->assignRole('admin');
 
@@ -31,6 +32,7 @@ class UserTableSeeder extends Seeder
             'memory_count' => $settings['memory_count'],
             'reading_count' => $settings['reading_count'],
             'repeat_term' => $settings['repeat_term'],
+            'lesson_size' => $settings['lesson_size'],
         ]);
         $user->assignRole('user');
 
@@ -41,6 +43,7 @@ class UserTableSeeder extends Seeder
             'memory_count' => $settings['memory_count'],
             'reading_count' => $settings['reading_count'],
             'repeat_term' => $settings['repeat_term'],
+            'lesson_size' => $settings['lesson_size'],
         ]);
         $user->assignRole(['admin', 'user']);
 

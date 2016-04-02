@@ -9,7 +9,7 @@ namespace App;
  * @property $status
  * @property $reading
  * @property $memory
- * @property $checked_at
+ * @property $check_at
  */
 class Exercise extends Model
 {
@@ -38,5 +38,15 @@ class Exercise extends Model
     public function setOldStatus()
     {
         $this->status = 'old';
+    }
+
+    public function getReading()
+    {
+        return (int) $this->reading;
+    }
+
+    public function getMemory()
+    {
+        return (int) $this->memory;
     }
 }

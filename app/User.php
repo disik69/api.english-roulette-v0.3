@@ -19,6 +19,7 @@ use Kodeine\Acl\Traits\HasRole;
  * @property $reading_count
  * @property $memory_count
  * @property $repeat_term
+ * @property $lesson_size
  */
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
