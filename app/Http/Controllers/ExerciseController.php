@@ -45,18 +45,7 @@ class ExerciseController extends Controller
 
             $exercises = [];
             foreach ($result as $key => $item) {
-                $exercises[$key]['id'] = $item->getId();
-                $exercises[$key]['word'] = $item->word->body;
-                $exercises[$key]['ts'] = $item->word->ts;
-                $exercises[$key]['position'] = $item->word->position ? $item->word->position->body : null;
-                $exercises[$key]['reading'] = $item->getReading();
-                $exercises[$key]['memory'] = $item->getMemory();
-                $exercises[$key]['translation'] = [];
-
-                foreach ($item->translations as $_key => $translation) {
-                    $exercises[$key]['translation'][$_key]['id'] = $translation->getId();
-                    $exercises[$key]['translation'][$_key]['body'] = $translation->body;
-                }
+                $exercises[$key] = $item->view();
             }
 
             if (count($exercises) > 0) {
@@ -78,18 +67,7 @@ class ExerciseController extends Controller
             $page['last_page'] = $result->lastPage();
             $page['data'] = [];
             foreach ($result as $key => $item) {
-                $page['data'][$key]['id'] = $item->getId();
-                $page['data'][$key]['word'] = $item->word->body;
-                $page['data'][$key]['ts'] = $item->word->ts;
-                $page['data'][$key]['position'] = $item->word->position ? $item->word->position->body : null;
-                $page['data'][$key]['reading'] = $item->getReading();
-                $page['data'][$key]['memory'] = $item->getMemory();
-                $page['data'][$key]['translation'] = [];
-
-                foreach ($item->translations as $_key => $translation) {
-                    $page['data'][$key]['translation'][$_key]['id'] = $translation->getId();
-                    $page['data'][$key]['translation'][$_key]['body'] = $translation->body;
-                }
+                $page['data'][$key] = $item->view();
             }
 
             if (count($page['data']) > 0) {
@@ -127,8 +105,7 @@ class ExerciseController extends Controller
                 if ($translation = $word->translations()->find($request->get('translation_id'))) {
                     $exercise = new Exercise();
 
-                    $exercise->reading = $user->reading_count;
-                    $exercise->memory = $user->memory_count;
+                    $exercise->setNewStatus($user);
 
                     $exercise->user()->associate($user);
                     $exercise->word()->associate($word);
@@ -160,20 +137,7 @@ class ExerciseController extends Controller
      */
     public function show($exercise)
     {
-        $result['id'] = $exercise->getId();
-        $result['word'] = $exercise->word->body;
-        $result['ts'] = $exercise->word->ts;
-        $result['position'] = $exercise->word->position ? $exercise->word->position->body : null;
-        $result['reading'] = $exercise->getReading();
-        $result['memory'] = $exercise->getMemory();
-        $result['memory'] = $exercise->getMemory();
-
-        foreach ($exercise->translations as $key => $translation) {
-            $result['translation'][$key]['id'] = $translation->getId();
-            $result['translation'][$key]['body'] = $translation->body;
-        }
-
-        return response()->json($result);
+        return response()->json($exercise->view());
     }
 
     /**
@@ -186,7 +150,41 @@ class ExerciseController extends Controller
      */
     public function update(Request $request, $exercise)
     {
-        echo('exercise update');
+        if ($request->get('up')) {
+            if ($exercise->status == 'new') {
+                if ($exercise->reading != 0) {
+                    $exercise->reading--;
+                } else if ($exercise->memory != 0) {
+                    $exercise->memory--;
+
+                    if ($exercise->memory == 0) {
+                        $exercise->setOldStatus(\Auth::user());
+                    }
+                }
+
+                $exercise->save();
+
+                $response = response('The exercise has been upped.');
+            } else {
+                $response = response()->json(['errors' => ['The exercise have the OLD status.']], 400);
+            }
+        } else if ($request->get('new')) {
+            $exercise->setNewStatus(\Auth::user());
+
+            $exercise->save();
+
+            $response = response('The NEW status has been defined.');
+        } else if ($request->get('old')) {
+            $exercise->setOldStatus(\Auth::user());
+
+            $exercise->save();
+
+            $response = response('The OLD status has been defined');
+        } else {
+            $response = response()->json(['errors' => ['The key hasn\'t defined.']], 400);
+        }
+
+        return $response;
     }
 
     /**
@@ -200,6 +198,6 @@ class ExerciseController extends Controller
     {
         $exercise->delete();
 
-        return response('This exercise has deleted.', 200);;
+        return response('This exercise has deleted.');
     }
 }

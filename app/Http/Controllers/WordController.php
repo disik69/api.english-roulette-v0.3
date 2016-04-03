@@ -31,11 +31,11 @@ class WordController extends Controller
                 $words[$key]['ts'] = $item->ts;
                 $words[$key]['position'] = $item->position ? $item->position->body : null;
                 $words[$key]['used'] = $exercises->contains('word_id', $item->id) ? true : false;
-                $words[$key]['translation'] = [];
+                $words[$key]['translations'] = [];
 
                 foreach ($item->translations as $_key => $translation) {
-                    $words[$key]['translation'][$_key]['id'] = $translation->getId();
-                    $words[$key]['translation'][$_key]['body'] = $translation->body;
+                    $words[$key]['translations'][$_key]['id'] = $translation->getId();
+                    $words[$key]['translations'][$_key]['body'] = $translation->body;
                 }
             }
 

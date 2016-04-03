@@ -88,7 +88,7 @@ class ExerciseTranslationController extends Controller
             if ($exercise->translations()->find($translation->id)) {
                 $exercise->translations()->detach($translation);
 
-                $response = response('This translation has deleted.', 200);
+                $response = response('This translation has deleted.');
             } else {
                 $response = response()->json(['errors' => ['This translation hasn\'t found in the exercise word.']], 404);
             }
