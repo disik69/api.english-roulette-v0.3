@@ -15,17 +15,17 @@ class CORS {
      */
     public function handle($request, Closure $next)
     {
-        header("Access-Control-Allow-Origin: *");
-
         // ALLOW OPTIONS METHOD
         $headers = [
+            'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
-            'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin'
+            'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, Limit, Page',
+            'Access-Control-Expose-Headers' => 'Current-Page, Last-Page',
         ];
 
         if ($request->getMethod() == "OPTIONS") {
             // The client-side application can set only headers allowed in Access-Control-Allow-Headers
-            return response()->make('OK', 200, $headers);
+            return response('', 200, $headers);
         }
 
         $response = $next($request);

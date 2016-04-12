@@ -55,7 +55,7 @@ class WordTranslationController extends Controller
 
         if ($validator->passes()) {
             if (is_null($word->position)) {
-                $translationId = $request->get('translation_id');
+                $translationId = $request->input('translation_id');
 
                 if (! $word->translations()->find($translationId)) {
                     $word->translations()->attach($translationId);

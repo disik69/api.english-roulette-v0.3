@@ -17,17 +17,17 @@ class TranslationController extends Controller
      */
     public function index()
     {
-        if ($body = \Request::get('body')) {
+        if ($body = \Request::input('body')) {
             $translation = Translation::where('body', $body)->first();
 
             if ($translation) {
-                $response = response()->json(['id' => $translation->getId(), 'body' => $translation->body]);
+                $response = response()->json([['id' => $translation->getId(), 'body' => $translation->body]]);
             } else {
                 $response = response()->json(['errors' => ['The translation hasn\'t found.']], 404);
             }
-        } else if ($autocomplete = \Request::get('autocomplete')) {
+        } else if ($autocomplete = \Request::input('autocomplete')) {
             $translations = Translation::select('body') ->where('body', 'LIKE', "$autocomplete%")
-                                                        ->take(\Request::get('limit') ?: 5)
+                                                        ->take(\Request::header('Limit') ?: 5)
                                                         ->get()
                                                         ->lists('body');
 
@@ -37,18 +37,18 @@ class TranslationController extends Controller
                 $response = response()->json(['errors' => ['The matched translations haven\'t found.']], 404);
             }
         } else {
-            $result = Translation::paginate(\Request::get('limit') ?: 10);
+            $result = Translation::paginate(\Request::header('Limit') ?: 10);
 
-            $page['current_page'] = $result->currentPage();
-            $page['last_page'] = $result->lastPage();
-            $page['data'] = [];
+            $headers['Current-Page'] = $result->currentPage();
+            $headers['Last-Page'] = $result->lastPage();
+            $translations = [];
             foreach ($result as $key => $item) {
-                $page['data'][$key]['id'] = $item->getId();
-                $page['data'][$key]['body'] = $item->body;
+                $translations[$key]['id'] = $item->getId();
+                $translations[$key]['body'] = $item->body;
             }
 
-            if (count($page['data']) > 0) {
-                $response = response()->json($page);
+            if (count($translations) > 0) {
+                $response = response()->json($translations, 200, $headers);
             } else {
                 $response = response()->json(['errors' => ['There aren\'t translations.']], 404);
             }
@@ -74,7 +74,7 @@ class TranslationController extends Controller
         );
 
         if ($validator->passes()) {
-            $translation = Translation::create(['body' => $request->get('body')]);
+            $translation = Translation::create(['body' => $request->input('body')]);
 
             $response = response()->json(['id' => $translation->getId()], 201);
         } else {

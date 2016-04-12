@@ -19,9 +19,9 @@ class ExerciseController extends Controller
     {
         $user = \Auth::user();
         $scope = $user->exercises()->with('word.position', 'translations');
-        $readingFlag = \Request::get('reading');
-        $memoryFlag = \Request::get('memory');
-        $checkFlag = \Request::get('check');
+        $readingFlag = \Request::input('reading');
+        $memoryFlag = \Request::input('memory');
+        $checkFlag = \Request::input('check');
 
         if ($readingFlag || $memoryFlag || $checkFlag) {
             $lessonSize = $user->lesson_size;
@@ -42,39 +42,29 @@ class ExerciseController extends Controller
             $result = $scope    ->orderBy('updated_at', 'ASC')
                                 ->take($lessonSize)
                                 ->get();
-
-            $exercises = [];
-            foreach ($result as $key => $item) {
-                $exercises[$key] = $item->view();
-            }
-
-            if (count($exercises) > 0) {
-                $response = response()->json($exercises);
-            } else {
-                $response = response()->json(['errors' => ['There aren\'t exercises.']], 404);
-            }
         } else {
-            if ($search = \Request::get('search')) {
+            if ($search = \Request::input('search')) {
                 $scope = $scope ->join('words', 'words.id', '=', 'exercises.word_id')
                                 ->where('words.body', 'LIKE', "$search%")
                                 ->select('exercises.*');
             }
 
             $result = $scope    ->orderBy('updated_at', 'DESC')
-                                ->paginate(\Request::get('limit') ?: 10);
+                                ->paginate(\Request::header('Limit') ?: 10);
 
-            $page['current_page'] = $result->currentPage();
-            $page['last_page'] = $result->lastPage();
-            $page['data'] = [];
-            foreach ($result as $key => $item) {
-                $page['data'][$key] = $item->view();
-            }
+            $headers['Current-Page'] = $result->currentPage();
+            $headers['Last-Page'] = $result->lastPage();
+        }
 
-            if (count($page['data']) > 0) {
-                $response = response()->json($page);
-            } else {
-                $response = response()->json(['errors' => ['There aren\'t exercises.']], 404);
-            }
+        $exercises = [];
+        foreach ($result as $key => $item) {
+            $exercises[$key] = $item->view();
+        }
+
+        if (count($exercises) > 0) {
+            $response = response()->json($exercises, 200, $headers);
+        } else {
+            $response = response()->json(['errors' => ['There aren\'t exercises.']], 404);
         }
 
         return $response;
@@ -99,10 +89,10 @@ class ExerciseController extends Controller
 
         if ($validator->passes()) {
             $user = \Auth::user();
-            $word = Word::find($request->get('word_id'));
+            $word = Word::find($request->input('word_id'));
 
             if (! $user->exercises->contains('word_id', $word->id)) {
-                if ($translation = $word->translations()->find($request->get('translation_id'))) {
+                if ($translation = $word->translations()->find($request->input('translation_id'))) {
                     $exercise = new Exercise();
 
                     $exercise->setNewStatus($user);
@@ -150,7 +140,7 @@ class ExerciseController extends Controller
      */
     public function update(Request $request, $exercise)
     {
-        if ($request->get('up')) {
+        if ($request->input('up')) {
             if ($exercise->status == 'new') {
                 if ($exercise->reading != 0) {
                     $exercise->reading--;
@@ -168,13 +158,13 @@ class ExerciseController extends Controller
             } else {
                 $response = response()->json(['errors' => ['The exercise have the OLD status.']], 400);
             }
-        } else if ($request->get('new')) {
+        } else if ($request->input('new')) {
             $exercise->setNewStatus(\Auth::user());
 
             $exercise->save();
 
             $response = response('The NEW status has been defined.');
-        } else if ($request->get('old')) {
+        } else if ($request->input('old')) {
             $exercise->setOldStatus(\Auth::user());
 
             $exercise->save();

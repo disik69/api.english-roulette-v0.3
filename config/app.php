@@ -127,7 +127,7 @@ return [
         Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
-        Illuminate\Pagination\PaginationServiceProvider::class,
+//        Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
@@ -139,16 +139,18 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Kodeine\Acl\AclServiceProvider::class,
-        App\Captcha\CaptchaServiceProvider::class,
-        App\YandexDictionary\YandexDictionaryProvider::class,
 
         /*
          * Application Service Providers...
          */
+        App\Captcha\CaptchaServiceProvider::class,
+        App\YandexDictionary\YandexDictionaryProvider::class,
+
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\PaginationServiceProvider::class,
 
     ],
 

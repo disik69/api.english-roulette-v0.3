@@ -19,7 +19,7 @@ class WordController extends Controller
      */
     public function index()
     {
-        if ($body = \Request::get('body')) {
+        if ($body = \Request::input('body')) {
             $result = Word::with('position', 'translations')->where('body', $body)->get();
             $exercises = \Auth::user()->exercises;
 
@@ -44,10 +44,10 @@ class WordController extends Controller
             } else {
                 $response = response()->json(['errors' => ['The word hasn\'t found.']], 404);
             }
-        } else if ($autocomplete = \Request::get('autocomplete')) {
+        } else if ($autocomplete = \Request::input('autocomplete')) {
             $words = Word::select('body')   ->where('body', 'LIKE', "$autocomplete%")
                                             ->groupBy('body')
-                                            ->take(\Request::get('limit') ?: 5)
+                                            ->take(\Request::header('Limit') ?: 5)
                                             ->get()
                                             ->lists('body');
 
@@ -57,20 +57,20 @@ class WordController extends Controller
                 $response = response()->json(['errors' => ['The matched words haven\'t found.']], 404);
             }
         } else {
-            $result = Word::with('position')->paginate(\Request::get('limit') ?: 10);
+            $result = Word::with('position')->paginate(\Request::header('Limit') ?: 10);
 
-            $page['current_page'] = $result->currentPage();
-            $page['last_page'] = $result->lastPage();
-            $page['data'] = [];
+            $headers['Current-Page'] = $result->currentPage();
+            $headers['Last-Page'] = $result->lastPage();
+            $words = [];
             foreach ($result as $key => $item) {
-                $page['data'][$key]['id'] = $item->getId();
-                $page['data'][$key]['body'] = $item->body;
-                $page['data'][$key]['ts'] = $item->ts;
-                $page['data'][$key]['position'] = $item->position ? $item->position->body : null;
+                $words[$key]['id'] = $item->getId();
+                $words[$key]['body'] = $item->body;
+                $words[$key]['ts'] = $item->ts;
+                $words[$key]['position'] = $item->position ? $item->position->body : null;
             }
 
-            if (count($page['data']) > 0) {
-                $response = response()->json($page);
+            if (count($words) > 0) {
+                $response = response()->json($words, 200, $headers);
             } else {
                 $response = response()->json(['errors' => ['There aren\'t words.']], 404);
             }
@@ -98,8 +98,8 @@ class WordController extends Controller
         );
 
         if ($validator->passes()) {
-            if ($request->get('via_dictionary')) {
-                $definitions = \YaDictionary::lookup($request->get('body'));
+            if ($request->input('via_dictionary')) {
+                $definitions = \YaDictionary::lookup($request->input('body'));
 
                 if ($definitions) {
                     foreach ($definitions as $definition) {
@@ -137,8 +137,8 @@ class WordController extends Controller
                     $response = response()->json(['errors' => ['This word has not found in the dictionary.']], 404);
                 }
             } else {
-                if ($translationId = $request->get('translation_id')) {
-                    $word = Word::create(['body' => $request->get('body')]);
+                if ($translationId = $request->input('translation_id')) {
+                    $word = Word::create(['body' => $request->input('body')]);
 
                     $word->translations()->attach($translationId);
 

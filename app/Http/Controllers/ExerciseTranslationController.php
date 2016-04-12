@@ -52,7 +52,7 @@ class ExerciseTranslationController extends Controller
         );
 
         if ($validator->passes()) {
-            $translationId = $request->get('translation_id');
+            $translationId = $request->input('translation_id');
 
             if (! $exercise->translations()->find($translationId)) {
                 if ($translation = $exercise->word->translations()->find($translationId)) {
