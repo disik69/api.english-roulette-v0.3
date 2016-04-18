@@ -20,7 +20,7 @@ class WordController extends Controller
     public function index()
     {
         if ($body = \Request::input('body')) {
-            $result = Word::with('position', 'translations')->where('body', $body)->get();
+            $result = Word::with('position', 'translations')->where('body', $body)->orderBy('position_id', 'DESC')->get();
             $exercises = \Auth::user()->exercises;
 
             $words = [];

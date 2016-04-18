@@ -91,7 +91,7 @@ class ExerciseController extends Controller
             $user = \Auth::user();
             $word = Word::find($request->input('word_id'));
 
-            if (! $user->exercises->contains('word_id', $word->id)) {
+            if (! $user->exercises()->where('word_id', $word->id)->first()) {
                 if ($translation = $word->translations()->find($request->input('translation_id'))) {
                     $exercise = new Exercise();
 

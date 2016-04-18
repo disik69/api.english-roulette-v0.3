@@ -44,7 +44,7 @@ class WordTranslationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $word)
+    public function store(Request $request, Word $word)
     {
         $validator = \Validator::make(
             $request->all(),
@@ -82,7 +82,7 @@ class WordTranslationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($word, $translation)
+    public function destroy(Word $word, Translation $translation)
     {
         echo('word.translation destroy');
     }

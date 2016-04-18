@@ -14,6 +14,8 @@ class ExerciseTranslationController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \App\Exercise $exercise
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Exercise $exercise)
@@ -39,6 +41,7 @@ class ExerciseTranslationController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param \App\Exercise $exercise
      *
      * @return \Illuminate\Http\Response
      */
