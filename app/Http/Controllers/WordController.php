@@ -30,7 +30,7 @@ class WordController extends Controller
                 $words[$key]['body'] = $item->body;
                 $words[$key]['ts'] = $item->ts;
                 $words[$key]['position'] = $item->position ? $item->position->body : null;
-                $words[$key]['used'] = $exercises->contains('word_id', $item->id) ? true : false;
+                $words[$key]['used'] = $exercises->contains('word_id', $item->id);
                 $words[$key]['translations'] = [];
 
                 foreach ($item->translations as $_key => $translation) {

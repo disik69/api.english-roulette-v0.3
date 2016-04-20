@@ -68,13 +68,31 @@ class Exercise extends Model
         $view['reading'] = $this->getReading();
         $view['memory'] = $this->getMemory();
         $view['status'] = $this->status;
+        $view['check_at'] = $this->getAtomCheckAt();
         $view['translations'] = [];
 
-        foreach ($this->translations as $key => $translation) {
+        $exerciseTranslations = $this->translations;
+        $wordTranslations = $this->word->translations;
+
+        foreach ($wordTranslations as $key => $translation) {
             $view['translations'][$key]['id'] = $translation->getId();
             $view['translations'][$key]['body'] = $translation->body;
+            $view['translations'][$key]['used'] = $exerciseTranslations->contains('id', $translation->id);
         }
 
         return $view;
+    }
+
+    public function getAtomCheckAt()
+    {
+        if ($this->check_at) {
+            $checkAt = new Carbon($this->check_at);
+
+            $result = $checkAt->toAtomString();
+        } else {
+            $result = null;
+        }
+
+        return $result;
     }
 }

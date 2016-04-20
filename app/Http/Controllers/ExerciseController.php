@@ -121,11 +121,11 @@ class ExerciseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Exercise  $exercise
+     * @param  \App\Exercise $exercise
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($exercise)
+    public function show(Exercise $exercise)
     {
         return response()->json($exercise->view());
     }
@@ -184,7 +184,7 @@ class ExerciseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($exercise)
+    public function destroy(Exercise $exercise)
     {
         $exercise->delete();
 
