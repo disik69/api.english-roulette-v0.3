@@ -48,8 +48,7 @@ class WordController extends Controller
             $words = Word::select('body')   ->where('body', 'LIKE', "$autocomplete%")
                                             ->groupBy('body')
                                             ->take(\Request::header('Limit') ?: 5)
-                                            ->get()
-                                            ->lists('body');
+                                            ->get();
 
             if (count($words) > 0) {
                 $response = response()->json($words);

@@ -28,8 +28,7 @@ class TranslationController extends Controller
         } else if ($autocomplete = \Request::input('autocomplete')) {
             $translations = Translation::select('body') ->where('body', 'LIKE', "$autocomplete%")
                                                         ->take(\Request::header('Limit') ?: 5)
-                                                        ->get()
-                                                        ->lists('body');
+                                                        ->get();
 
             if (count($translations) > 0) {
                 $response = response()->json($translations);

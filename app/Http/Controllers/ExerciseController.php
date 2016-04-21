@@ -22,6 +22,7 @@ class ExerciseController extends Controller
         $readingFlag = \Request::input('reading');
         $memoryFlag = \Request::input('memory');
         $checkFlag = \Request::input('check');
+        $headers = [];
 
         if ($readingFlag || $memoryFlag || $checkFlag) {
             $lessonSize = $user->lesson_size;
