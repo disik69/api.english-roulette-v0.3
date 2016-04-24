@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Setting;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class SignController extends Controller
 {
@@ -60,6 +61,13 @@ class SignController extends Controller
         return $response;
     }
 
+    public function out()
+    {
+        \JWTAuth::parseToken()->invalidate();
+
+        return response('Signout has been success.');
+    }
+
     public function checkEmail()
     {
         $validator = \Validator::make(
@@ -85,20 +93,22 @@ class SignController extends Controller
 
     public function debug()
     {
-        $pasport['name'] = 'guest';
-        $pasport['roles'] = ['guest'];
+        $passport['id'] = 0;
+        $passport['name'] = 'guest';
+        $passport['roles'] = ['guest'];
 
         try {
             $user = \JWTAuth::parseToken()->authenticate();
-        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+        } catch (JWTException $e) {
             $user = null;
         }
 
         if ($user) {
-            $pasport['name'] = $user->name;
-            $pasport['roles'] = array_values($user->getRoles());
+            $passport['id'] = $user->getId();
+            $passport['name'] = $user->name;
+            $passport['roles'] = array_values($user->getRoles());
         }
 
-        return response()->json($pasport);
+        return response()->json($passport);
     }
 }

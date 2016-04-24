@@ -24,6 +24,8 @@ Route::get('check-captcha', 'SandboxController@checkCaptcha');
 
 Route::get('get-exercise/{exercise}', 'SandboxController@getExercise');
 
+Route::get('jwt', 'SandboxController@jwt');
+
 Route::get('test-user', [
     'middleware' => ['jwt.auth', 'acl'],
     'is' => 'user', 'uses' => 'SandboxController@testUser'
@@ -53,6 +55,7 @@ $protectMethods = [
  */
 Route::post('signup', 'SignController@up');
 Route::post('signin', 'SignController@in');
+Route::post('signout', 'SignController@out');
 Route::get('check-email', 'SignController@checkEmail');
 Route::get('debug-token', 'SignController@debug');
 

@@ -174,4 +174,9 @@ class SandboxController extends Controller
     {
         dd($exercise);
     }
+
+    public function jwt()
+    {
+
+    }
 }
