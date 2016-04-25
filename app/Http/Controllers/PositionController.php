@@ -15,6 +15,6 @@ class PositionController extends Controller
      */
     public function index()
     {
-        echo 'position index';
+        echo('position index');
     }
 }

@@ -39,7 +39,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'reading_count', 'memory_count', 'repeat_term'];
+    protected $fillable = ['name', 'email', 'password', 'reading_count', 'memory_count', 'repeat_term', 'lesson_size'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -51,5 +51,17 @@ class User extends Model implements AuthenticatableContract,
     public function exercises()
     {
         return $this->hasMany(Exercise::class);
+    }
+
+    public function view()
+    {
+        $view['name'] = $this->name;
+        $view['email'] = $this->email;
+        $view['lesson_size'] = (int) $this->lesson_size;
+        $view['reading_count'] = (int) $this->reading_count;
+        $view['memory_count'] = (int) $this->memory_count;
+        $view['repeat_term'] = (int) $this->repeat_term;
+
+        return $view;
     }
 }

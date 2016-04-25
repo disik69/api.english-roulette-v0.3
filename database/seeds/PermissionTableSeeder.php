@@ -17,6 +17,27 @@ class PermissionTableSeeder extends Seeder
         \DB::table('permissions')->delete();
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
+        $userPermission = Permission::create([
+            'name'        => 'user',
+            'slug'        => [
+                'index' => true,
+                'store' => true,
+                'show' => true,
+                'update' => true,
+                'destroy' => true,
+            ],
+            'description' => 'user',
+        ]);
+        $userPermissionForUser = Permission::create([
+            'name'        => 'user.user',
+            'slug'        => [
+                'index' => false,
+                'store' => false,
+                'destroy' => false,
+            ],
+            'inherit_id' => $userPermission->getKey(),
+            'description' => 'user',
+        ]);
 
         $exercisePermission = Permission::create([
             'name'        => 'exercise',
@@ -112,17 +133,19 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         Role::where('slug', 'user')->first()->assignPermission([
+            $userPermissionForUser,
             $exercisePermission,
             $exerciseTranslationPermission,
             $wordTranslationPermissionForUser,
             $wordPermissionForUser,
-            $translationPermissionForUser
+            $translationPermissionForUser,
         ]);
         Role::where('slug', 'admin')->first()->assignPermission([
+            $userPermission,
             $wordPermission,
             $wordTranslationPermission,
             $translationPermission,
-            $positionPermission
+            $positionPermission,
         ]);
     }
 }

@@ -14,30 +14,30 @@
 /*
  * test section
  */
-Route::get('create-collocations', 'SandboxController@createCollocations');
-Route::get('create-exercise', 'SandboxController@createExercise');
-Route::get('user/{id}/exercises', 'SandboxController@getUserExercises');
-
-Route::get('yandex-dictionary', 'SandboxController@yandexDictionary');
-
-Route::get('check-captcha', 'SandboxController@checkCaptcha');
-
-Route::get('get-exercise/{exercise}', 'SandboxController@getExercise');
-
-Route::get('jwt', 'SandboxController@jwt');
-
-Route::get('test-user', [
-    'middleware' => ['jwt.auth', 'acl'],
-    'is' => 'user', 'uses' => 'SandboxController@testUser'
-]);
-Route::get('test-admin', [
-    'middleware' => ['jwt.auth', 'acl'],
-    'is' => 'admin', 'uses' => 'SandboxController@testAdmin'
-]);
-Route::get('test-permissions', [
-    'middleware' => 'jwt.auth',
-    'uses' => 'SandboxController@testPermissions'
-]);
+//Route::get('create-collocations', 'SandboxController@createCollocations');
+//Route::get('create-exercise', 'SandboxController@createExercise');
+//Route::get('user/{id}/exercises', 'SandboxController@getUserExercises');
+//
+//Route::get('yandex-dictionary', 'SandboxController@yandexDictionary');
+//
+//Route::get('check-captcha', 'SandboxController@checkCaptcha');
+//
+//Route::get('get-exercise/{exercise}', 'SandboxController@getExercise');
+//
+//Route::get('jwt', 'SandboxController@jwt');
+//
+//Route::get('test-user', [
+//    'middleware' => ['jwt.auth', 'acl'],
+//    'is' => 'user', 'uses' => 'SandboxController@testUser'
+//]);
+//Route::get('test-admin', [
+//    'middleware' => ['jwt.auth', 'acl'],
+//    'is' => 'admin', 'uses' => 'SandboxController@testAdmin'
+//]);
+//Route::get('test-permissions', [
+//    'middleware' => 'jwt.auth',
+//    'uses' => 'SandboxController@testPermissions'
+//]);
 
 /*
  * protect schema
@@ -56,8 +56,17 @@ $protectMethods = [
 Route::post('signup', 'SignController@up');
 Route::post('signin', 'SignController@in');
 Route::post('signout', 'SignController@out');
-Route::get('check-email', 'SignController@checkEmail');
+Route::get('check-email/{user?}', 'SignController@checkEmail');
 Route::get('debug-token', 'SignController@debug');
+
+Route::group([
+    'middleware' => ['jwt.auth', 'acl', 'user_owner'],
+    'is' => 'user|admin',
+    'protect_alias' => 'user',
+    'protect_methods' => $protectMethods,
+], function () {
+    Route::resource('user', 'UserController', ['except' => ['create', 'edit']]);
+});
 
 Route::group([
     'middleware' => ['jwt.auth', 'acl', 'exercise_owner'],

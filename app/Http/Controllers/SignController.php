@@ -36,6 +36,7 @@ class SignController extends Controller
                 'memory_count' => $settings['memory_count'],
                 'reading_count' => $settings['reading_count'],
                 'repeat_term' => $settings['repeat_term'],
+                'lesson_size' => $settings['lesson_size'],
             ]);
 
             $user->assignRole('user');
@@ -68,8 +69,14 @@ class SignController extends Controller
         return response('Signout has been success.');
     }
 
-    public function checkEmail()
+    public function checkEmail(User $user = null)
     {
+        if ($user) {
+            $uniqueRule = 'unique:users,email,' . $user->id;
+        } else {
+            $uniqueRule = 'unique:users';
+        }
+
         $validator = \Validator::make(
             \Request::all(),
             [
@@ -77,13 +84,13 @@ class SignController extends Controller
                     'required',
                     'max:60',
                     'regex:/^.+@(\w([\w-]*\w)?\.)+\w+$/',
-                    'unique:users',
+                    $uniqueRule,
                 ],
             ]
         );
 
         if ($validator->passes()) {
-            $response = response()->json();
+            $response = response('This email is free.');
         } else {
             $response = response()->json(['errors' => $validator->messages()->all()], 400);
         }
