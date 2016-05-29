@@ -43,6 +43,11 @@ class ExerciseController extends Controller
             $result = $scope    ->orderBy('updated_at', 'ASC')
                                 ->take($lessonSize)
                                 ->get();
+        } else if ($randomExcludedId = \Request::input('random_excluded_id')) {
+            $result = $scope    ->where('id', '!=', $randomExcludedId)
+                                ->orderByRaw('RAND()')
+                                ->take(\Request::header('Limit') ?: 5)
+                                ->get();
         } else {
             if ($search = \Request::input('search')) {
                 $scope = $scope ->join('words', 'words.id', '=', 'exercises.word_id')

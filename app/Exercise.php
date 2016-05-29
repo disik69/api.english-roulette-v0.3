@@ -46,7 +46,7 @@ class Exercise extends Model
         $this->status = 'old';
         $this->reading = 0;
         $this->memory = 0;
-        $this->check_at = Carbon::now()->addDays($user->repeat_term);
+        $this->check_at = Carbon::now()->addDays($user->repeat_term)->startOfDay();
     }
 
     public function getReading()
