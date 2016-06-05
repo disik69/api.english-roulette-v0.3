@@ -71,7 +71,7 @@ class WordController extends Controller
             if (count($words) > 0) {
                 $response = response()->json($words, 200, $headers);
             } else {
-                $response = response()->json(['errors' => ['There aren\'t words.']], 404);
+                $response = response()->json(['errors' => ['there aren\'t any words.']], 404);
             }
         }
 

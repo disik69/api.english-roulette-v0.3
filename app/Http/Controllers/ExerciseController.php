@@ -28,24 +28,27 @@ class ExerciseController extends Controller
             $lessonSize = $user->lesson_size;
 
             if ($readingFlag) {
-                $scope = $scope ->where('status', 'new')
-                                ->where('reading', '!=', 0)
-                                ->where('memory', '!=', 0);
+                $scope ->where('status', 'new')
+                       ->where('reading', '!=', 0)
+                       ->where('memory', '!=', 0);
             } else if ($memoryFlag) {
-                $scope = $scope ->where('status', 'new')
-                                ->where('reading', 0)
-                                ->where('memory', '!=', 0);
+                $scope ->where('status', 'new')
+                       ->where('reading', 0)
+                       ->where('memory', '!=', 0);
             } else if ($checkFlag) {
-                $scope = $scope ->where('status', 'old')
-                                ->where('check_at', '<', date_create());
+                $scope ->where('status', 'old')
+                       ->where('check_at', '<', date_create());
             }
 
             $result = $scope    ->orderBy('updated_at', 'ASC')
                                 ->take($lessonSize)
                                 ->get();
-        } else if ($randomExcludedId = \Request::input('random_excluded_id')) {
-            $result = $scope    ->where('id', '!=', $randomExcludedId)
-                                ->orderByRaw('RAND()')
+        } else if (\Request::input('random')) {
+            if ($excludedId = \Request::input('excluded_id')) {
+                $scope->where('id', '!=', $excludedId);
+            }
+
+            $result = $scope    ->orderByRaw('RAND()')
                                 ->take(\Request::header('Limit') ?: 5)
                                 ->get();
         } else {
@@ -70,7 +73,7 @@ class ExerciseController extends Controller
         if (count($exercises) > 0) {
             $response = response()->json($exercises, 200, $headers);
         } else {
-            $response = response()->json(['errors' => ['There aren\'t exercises.']], 404);
+            $response = response()->json(['errors' => ['there aren\'t any exercises.']], 404);
         }
 
         return $response;

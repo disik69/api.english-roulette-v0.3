@@ -49,7 +49,7 @@ class TranslationController extends Controller
             if (count($translations) > 0) {
                 $response = response()->json($translations, 200, $headers);
             } else {
-                $response = response()->json(['errors' => ['There aren\'t translations.']], 404);
+                $response = response()->json(['errors' => ['there aren\'t any translations.']], 404);
             }
         }
 
