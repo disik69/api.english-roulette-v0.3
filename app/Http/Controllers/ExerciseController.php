@@ -18,7 +18,7 @@ class ExerciseController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $scope = $user->exercises()->with('word.position', 'translations');
+        $scope = $user->exercises()->with('word.position', 'word.translations', 'translations');
         $readingFlag = \Request::input('reading');
         $memoryFlag = \Request::input('memory');
         $checkFlag = \Request::input('check');
@@ -28,16 +28,16 @@ class ExerciseController extends Controller
             $lessonSize = $user->lesson_size;
 
             if ($readingFlag) {
-                $scope ->where('status', 'new')
-                       ->where('reading', '!=', 0)
-                       ->where('memory', '!=', 0);
+                $scope  ->where('status', 'new')
+                        ->where('reading', '!=', 0)
+                        ->where('memory', '!=', 0);
             } else if ($memoryFlag) {
-                $scope ->where('status', 'new')
-                       ->where('reading', 0)
-                       ->where('memory', '!=', 0);
+                $scope  ->where('status', 'new')
+                        ->where('reading', 0)
+                        ->where('memory', '!=', 0);
             } else if ($checkFlag) {
-                $scope ->where('status', 'old')
-                       ->where('check_at', '<', date_create());
+                $scope  ->where('status', 'old')
+                        ->where('check_at', '<', date_create());
             }
 
             $result = $scope    ->orderBy('updated_at', 'ASC')
@@ -53,9 +53,9 @@ class ExerciseController extends Controller
                                 ->get();
         } else {
             if ($search = \Request::input('search')) {
-                $scope = $scope ->join('words', 'words.id', '=', 'exercises.word_id')
-                                ->where('words.body', 'LIKE', "$search%")
-                                ->select('exercises.*');
+                $scope->whereHas('word', function ($query) use ($search) {
+                    $query->where('body', 'LIKE', "$search%");
+                });
             }
 
             $result = $scope    ->orderBy('updated_at', 'DESC')
