@@ -41,6 +41,7 @@ class ExerciseController extends Controller
             }
 
             $result = $scope    ->orderBy('updated_at', 'ASC')
+                                ->orderBy('id', 'ASC')
                                 ->take($lessonSize)
                                 ->get();
         } else if (\Request::input('random')) {
@@ -59,6 +60,7 @@ class ExerciseController extends Controller
             }
 
             $result = $scope    ->orderBy('updated_at', 'DESC')
+                                ->orderBy('id', 'ASC')
                                 ->paginate(\Request::header('Limit') ?: 10);
 
             $headers['Current-Page'] = $result->currentPage();
