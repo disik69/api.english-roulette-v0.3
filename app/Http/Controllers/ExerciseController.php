@@ -55,7 +55,7 @@ class ExerciseController extends Controller
         } else {
             if ($search = \Request::input('search')) {
                 $scope->whereHas('word', function ($query) use ($search) {
-                    $query->where('body', 'LIKE', "$search%");
+                    $query->where('body', 'LIKE', "%$search%");
                 });
             }
 
